@@ -9,13 +9,15 @@ swagger-ui-bundle.js - 스웨거를 사용하기위한 라이브러리
 [swagger-ui] https://github.com/swagger-api/swagger-ui/tree/master/dist
 
 ## 사용법
-
 ### Script Import
-- proto.bundle.js
+#### 예시파일
+[index.html](./index.html)
+
+- [proto.bundle.js](./proto.bundle.js)
     - 프로토버퍼 번들 파일
-- swagger-protobuf-ui-core.js
+- [swagger-protobuf-ui-core.js](./assets/script/protobuf/swagger-protobuf-ui-core.js)
     - swagger-protobuf-ui-core 코어 파일
-- swagger-initializer.js
+- [swagger-initializer.js](./swagger-initializer.js)
     - SwaggerProtoBufUIBundle 초기화 파일
 
 ```
@@ -29,6 +31,10 @@ swagger-ui-bundle.js - 스웨거를 사용하기위한 라이브러리
 
 ### SwaggerProtoBufUIBundle
 SwaggerUIBundle를 대체하여 SwaggerUI를 생성해주는 함수
+
+#### 예시파일
+[swagger-initializer.js](./swagger-initializer.js)
+
 #### 매개변수
 1. ProtoLibraryObject
     - 프로토버퍼로 생성된 js번들에서 사용되는 전역변수
@@ -49,6 +55,10 @@ window.onload = function() {
 
 ### Swagger/OpenApi 정의 사양 설정 방법
 요청과 응답에 필요한 Proto.Message는 아래의 키로 설정해야함.
+
+#### 예시파일
+[server.json](./server.json)
+
 1. req_message
     - 요청에 사용되는 Message 키
     - Method안에 정의
@@ -73,11 +83,11 @@ window.onload = function() {
 ## 예시
 ### 프로토버퍼 컴파일 예시
 프로토버퍼(.proto)를 사용하여 JavaScript(bundle.js)를 만든 예제<br/>
-example/protobuf에 예제가 있습니다.
+[example/protobuf](./example/protobuf)에 예제가 있습니다.
 
 ### 서버 예시
 프로토버퍼를 컴파일한 bundle.js를 사용하여 만든 api서버 예제<br/>
-example/server에 예제가 있습니다.
+[example/server]((./example/server))에 예제가 있습니다.
 
 ## Acknowledgements
 
