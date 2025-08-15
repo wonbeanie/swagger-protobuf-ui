@@ -70,6 +70,15 @@ window.onload = function() {
 ...
 ```
 
+## 예시
+### 프로토버퍼 컴파일 예시
+프로토버퍼(.proto)를 사용하여 JavaScript(bundle.js)를 만든 예제<br/>
+example/protobuf에 예제가 있습니다.
+
+### 서버 예시
+프로토버퍼를 컴파일한 bundle.js를 사용하여 만든 api서버 예제<br/>
+example/server에 예제가 있습니다.
+
 ## Acknowledgements
 
 This project uses the following open source software:
