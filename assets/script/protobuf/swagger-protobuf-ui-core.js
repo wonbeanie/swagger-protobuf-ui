@@ -8,6 +8,14 @@ let SwaggerProtoBufUIBundle = (libraryObject, options) => {
                 spec: {
                     wrapActions: {
                         executeRequest : (originalAction, system) => {
+                            const isNullOrWhitespace = (str) => {
+                                if (str === null) {
+                                    return true;
+                                }
+                                
+                                return typeof str !== 'string' || str.trim().length === 0;
+                            }
+
                             return (request) => {
                                 try{
                                     const spec = system.specSelectors.specJson().toJS();
@@ -24,11 +32,8 @@ let SwaggerProtoBufUIBundle = (libraryObject, options) => {
                                         resMessage = operation.res_message;
                                     }
 
-                                    if(
-                                        reqMessage === "" && !reqMessage ||
-                                        resMessage === "" && !resMessage
-                                    ){
-                                        throw Error("Error : The protobuf message is empty or undefined.");
+                                    if(isNullOrWhitespace(resMessage)){
+                                        throw Error("Error : The protobuf message is empty, undefined, null.");
                                     }
 
                                 }
