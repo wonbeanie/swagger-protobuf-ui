@@ -1,4 +1,4 @@
-var SwaggerProtoBufUIBundle = (libraryObject, options) => {
+let SwaggerProtoBufUIBundle = (libraryObject, options) => {
     let reqMessage = "";
     let resMessage = "";
 
@@ -11,17 +11,17 @@ var SwaggerProtoBufUIBundle = (libraryObject, options) => {
                             return (request) => {
                                 try{
                                     const spec = system.specSelectors.specJson().toJS();
-                                    for (const path in spec.paths) {
-                                        const pathItem = spec.paths[path];
-                                        for (const method in pathItem) {
-                                            const operation = pathItem[method];
-                                            if (operation.req_message) {
-                                                reqMessage = operation.req_message;
-                                            }
-                                            if (operation.res_message) {
-                                                resMessage = operation.res_message;
-                                            }
-                                        }
+
+                                    const pathName = request.pathName;
+                                    const method = request.method;
+
+                                    const pathItem = spec.paths[pathName];
+                                    const operation = pathItem[method];
+                                    if (operation.req_message) {
+                                        reqMessage = operation.req_message;
+                                    }
+                                    if (operation.res_message) {
+                                        resMessage = operation.res_message;
                                     }
 
                                     if(
