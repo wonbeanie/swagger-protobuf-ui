@@ -2,48 +2,51 @@ let SwaggerProtoBufUIBundle = (libraryObject, options) => {
     let reqMessage = "";
     let resMessage = "";
 
-    const SwaggerPorotoBufPlugin = function(system) {
+    const SwaggerPorotoBufPlugin = function() {
+        
+        const getPorotoMessageKey = (originalAction, system) => {
+            const isNullOrWhitespace = (str) => {
+                if (str === null) {
+                    return true;
+                }
+                
+                return typeof str !== 'string' || str.trim().length === 0;
+            }
+
+            return (request) => {
+                try{
+                    const spec = system.specSelectors.specJson().toJS();
+
+                    const pathName = request.pathName;
+                    const method = request.method;
+
+                    const pathItem = spec.paths[pathName];
+                    const operation = pathItem[method];
+                    if (operation.req_message) {
+                        reqMessage = operation.req_message;
+                    }
+                    if (operation.res_message) {
+                        resMessage = operation.res_message;
+                    }
+
+                    if(isNullOrWhitespace(resMessage)){
+                        throw Error("Error : The protobuf message is empty, undefined, null.");
+                    }
+
+                }
+                catch(err){
+                    console.error("Error : Protobuf message parsing failed in specification");
+                }
+
+                return originalAction(request);
+            }
+        }
+        
         return {
             statePlugins: {
                 spec: {
                     wrapActions: {
-                        executeRequest : (originalAction, system) => {
-                            const isNullOrWhitespace = (str) => {
-                                if (str === null) {
-                                    return true;
-                                }
-                                
-                                return typeof str !== 'string' || str.trim().length === 0;
-                            }
-
-                            return (request) => {
-                                try{
-                                    const spec = system.specSelectors.specJson().toJS();
-
-                                    const pathName = request.pathName;
-                                    const method = request.method;
-
-                                    const pathItem = spec.paths[pathName];
-                                    const operation = pathItem[method];
-                                    if (operation.req_message) {
-                                        reqMessage = operation.req_message;
-                                    }
-                                    if (operation.res_message) {
-                                        resMessage = operation.res_message;
-                                    }
-
-                                    if(isNullOrWhitespace(resMessage)){
-                                        throw Error("Error : The protobuf message is empty, undefined, null.");
-                                    }
-
-                                }
-                                catch(err){
-                                    console.error("Error : Protobuf message parsing failed in specification");
-                                }
-
-                                return originalAction(request);
-                            }
-                        }
+                        executeRequest : getPorotoMessageKey
                     }
                 }
             }
