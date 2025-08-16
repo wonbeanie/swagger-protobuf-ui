@@ -12,7 +12,7 @@ Example of compiling protobuf into js
     npx protoc --js_out=import_style=commonjs,binary:./generated -I ./proto proto/*.proto
 ```
 
-
+### 사용 순서
 1. /proto 폴더에 .proto파일(들)을 넣는다.
 2. npm i
 3. npm run build
