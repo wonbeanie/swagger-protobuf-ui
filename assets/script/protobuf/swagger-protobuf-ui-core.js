@@ -157,7 +157,7 @@ let SwaggerProtoBufUIBundle = (libraryObject, options) => {
         ],
         requestInterceptor : async (request) => {
             try{
-                if(reqMessage !== ""){
+                if(!isBlank(reqMessage)){
                     let swaggerProtoBuf = new SwaggerProtoBuf(reqMessage);
 
                     request = await swaggerProtoBuf.requestInterceptor(request);
@@ -175,7 +175,7 @@ let SwaggerProtoBufUIBundle = (libraryObject, options) => {
         },
         responseInterceptor : async (response) => {
             try{
-                if(resMessage !== ""){
+                if(!isBlank(resMessage)){
                     let swaggerProtoBuf = new SwaggerProtoBuf(resMessage);
 
                     response = await swaggerProtoBuf.responseInterceptor(response);                    
