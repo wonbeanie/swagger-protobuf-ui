@@ -2,16 +2,17 @@ let SwaggerProtoBufUIBundle = (libraryObject, options) => {
     let reqMessage = "";
     let resMessage = "";
 
-    const SwaggerPorotoBufPlugin = function() {
+    const isBlank = (str) => {
+        if (str === null) {
+            return true;
+        }
         
+        return typeof str !== 'string' || str.trim().length === 0;
+    }
+
+    const SwaggerPorotoBufPlugin = function() {
+
         const getPorotoMessageKey = (originalAction, system) => {
-            const isBlank = (str) => {
-                if (str === null) {
-                    return true;
-                }
-                
-                return typeof str !== 'string' || str.trim().length === 0;
-            }
 
             return (request) => {
                 try{
