@@ -17,6 +17,7 @@
         "summary": "ID로 사용자 정보 조회",
         "description": "특정 ID를 가진 사용자의 정보를 Protobuf 형식으로 직렬화하여 반환합니다.",
         "tags": ["Users"],
+        "res_message" : "User",
         "parameters": [
           {
             "name": "id",

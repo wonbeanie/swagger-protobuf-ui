@@ -15,6 +15,8 @@ let SwaggerProtoBufUIBundle = (libraryObject, options) => {
 
             return (request) => {
                 try{
+                    reqMessage = "";
+                    resMessage = "";
                     const spec = system.specSelectors.specJson().toJS();
 
                     const pathName = request.pathName;
@@ -154,9 +156,11 @@ let SwaggerProtoBufUIBundle = (libraryObject, options) => {
         ],
         requestInterceptor : async (request) => {
             try{
-                let swaggerProtoBuf = new SwaggerProtoBuf(reqMessage);
+                if(reqMessage !== ""){
+                    let swaggerProtoBuf = new SwaggerProtoBuf(reqMessage);
 
-                request = await swaggerProtoBuf.requestInterceptor(request);
+                    request = await swaggerProtoBuf.requestInterceptor(request);
+                }
             }
             catch(err){
                 console.error(err);
@@ -170,9 +174,11 @@ let SwaggerProtoBufUIBundle = (libraryObject, options) => {
         },
         responseInterceptor : async (response) => {
             try{
-                let swaggerProtoBuf = new SwaggerProtoBuf(resMessage);
+                if(resMessage !== ""){
+                    let swaggerProtoBuf = new SwaggerProtoBuf(resMessage);
 
-                response = await swaggerProtoBuf.responseInterceptor(response);
+                    response = await swaggerProtoBuf.responseInterceptor(response);                    
+                }
             }
             catch(err){
                 console.error(err);
