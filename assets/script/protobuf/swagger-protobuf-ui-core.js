@@ -5,7 +5,7 @@ let SwaggerProtoBufUIBundle = (libraryObject, options) => {
     const SwaggerPorotoBufPlugin = function() {
         
         const getPorotoMessageKey = (originalAction, system) => {
-            const isNullOrWhitespace = (str) => {
+            const isBlank = (str) => {
                 if (str === null) {
                     return true;
                 }
@@ -31,7 +31,7 @@ let SwaggerProtoBufUIBundle = (libraryObject, options) => {
                         resMessage = operation.res_message;
                     }
 
-                    if(isNullOrWhitespace(resMessage)){
+                    if(isBlank(resMessage)){
                         throw Error("Error : The protobuf message is empty, undefined, null.");
                     }
 
