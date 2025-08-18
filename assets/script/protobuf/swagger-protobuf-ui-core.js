@@ -15,30 +15,20 @@ let SwaggerProtoBufUIBundle = (libraryObject, options) => {
         const getPorotoMessageKey = (originalAction, system) => {
 
             return (request) => {
-                try{
-                    reqMessage = "";
-                    resMessage = "";
-                    const spec = system.specSelectors.specJson().toJS();
+                reqMessage = "";
+                resMessage = "";
+                const spec = system.specSelectors.specJson().toJS();
 
-                    const pathName = request.pathName;
-                    const method = request.method;
+                const pathName = request.pathName;
+                const method = request.method;
 
-                    const pathItem = spec.paths[pathName];
-                    const operation = pathItem[method];
-                    if (operation.req_message) {
-                        reqMessage = operation.req_message;
-                    }
-                    if (operation.res_message) {
-                        resMessage = operation.res_message;
-                    }
-
-                    if(isBlank(resMessage)){
-                        throw Error("Error : The protobuf message is empty, undefined, null.");
-                    }
-
+                const pathItem = spec.paths[pathName];
+                const operation = pathItem[method];
+                if (operation.req_message) {
+                    reqMessage = operation.req_message;
                 }
-                catch(err){
-                    console.error("Error : Protobuf message parsing failed in specification");
+                if (operation.res_message) {
+                    resMessage = operation.res_message;
                 }
 
                 return originalAction(request);
