@@ -77,6 +77,16 @@ app.get('/users/:id', (req, res) => {
     res.send(Buffer.from(buffer));
 });
 
+app.get('/users/:id/info', (req, res) => {
+    const user = users.find(u => u.id === parseInt(req.params.id));
+
+    if (!user) {
+        return res.status(404).send('User not found');
+    }
+
+    res.setHeader('Content-Type', 'application/json');
+    res.send(user);
+});
 
 app.listen(port, () => {
     console.log(`✅ Server with google-protobuf is running at http://localhost:${port}`);
