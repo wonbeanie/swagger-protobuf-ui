@@ -9,15 +9,17 @@ swagger-ui-bundle.js - 스웨거를 사용하기위한 라이브러리
 [swagger-ui] https://github.com/swagger-api/swagger-ui/tree/master/dist
 
 ## 사용법
+[예시폴더](./example/web)
+
 ### Script Import
 #### 예시파일
-[index.html](./index.html)
+[index.html](./example/web/index.html)
 
-- [proto.bundle.js](./proto.bundle.js)
+- [proto.bundle.js](./example/web/proto.bundle.js)
     - 프로토버퍼 번들 파일
-- [swagger-protobuf-ui-core.js](./assets/script/protobuf/swagger-protobuf-ui-core.js)
+- [swagger-protobuf-core.js](./example/web/swagger-protobuf-core.js)
     - swagger-protobuf-ui-core 코어 파일
-- [swagger-initializer.js](./swagger-initializer.js)
+- [swagger-initializer.js](./example/web/swagger-initializer.js)
     - SwaggerProtoBufUIBundle 초기화 파일
 
 ```
@@ -33,7 +35,7 @@ swagger-ui-bundle.js - 스웨거를 사용하기위한 라이브러리
 SwaggerUIBundle를 대체하여 SwaggerUI를 생성해주는 함수
 
 #### 예시파일
-[swagger-initializer.js](./swagger-initializer.js)
+[swagger-initializer.js](./example/web/swagger-initializer.js)
 
 #### 매개변수
 1. ProtoLibraryObject
@@ -57,7 +59,7 @@ window.onload = function() {
 요청과 응답에 필요한 Proto.Message는 아래의 키로 설정해야함.
 
 #### 예시파일
-[server.json](./server.json)
+[server.json](./example/web/server.json)
 
 1. req_message
     - 요청에 사용되는 Message 키

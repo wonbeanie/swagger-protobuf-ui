@@ -18,7 +18,7 @@ module.exports = {
     ],
   },
   devServer: {
-    static: './build',
+    static: './example/web',
     hot: true,
   },
 };
