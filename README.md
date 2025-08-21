@@ -8,11 +8,13 @@ swagger-ui-bundle.js - 스웨거를 사용하기위한 라이브러리
 [google-protobuf] https://github.com/protocolbuffers/protobuf-javascript<br/>
 [swagger-ui] https://github.com/swagger-api/swagger-ui/tree/master/dist
 
-## 사용법
-[예시폴더](./example/web)
+## 예시
+### Swagger 웹 예시
 
-### Script Import
-#### 예시파일
+#### 예시폴더
+[./example/web](./example/web)
+
+#### 필수 import 파일
 [index.html](./example/web/index.html)
 
 - [proto.bundle.js](./example/web/proto.bundle.js)
@@ -82,7 +84,6 @@ window.onload = function() {
 ...
 ```
 
-## 예시
 ### 프로토버퍼 컴파일 예시
 프로토버퍼(.proto)를 사용하여 JavaScript(bundle.js)를 만든 예제<br/>
 [example/protobuf](./example/protobuf)에 예제가 있습니다.
