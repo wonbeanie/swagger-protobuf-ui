@@ -8,6 +8,15 @@ swagger-ui-bundle.js - 스웨거를 사용하기위한 라이브러리
 [google-protobuf] https://github.com/protocolbuffers/protobuf-javascript<br/>
 [swagger-ui] https://github.com/swagger-api/swagger-ui/tree/master/dist
 
+## 번들링 테스트 및 방법
+[webpack설정파일](./webpack.config.js)
+
+```
+npm i
+npm run start // development로 webpack-dev-server 시작
+npm run build // production로 번들링 시작
+```
+
 ## 예시
 ### Swagger 웹 예시
 
