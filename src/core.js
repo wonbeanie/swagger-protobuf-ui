@@ -55,17 +55,7 @@ export default class SwaggerProtoBuf {
         }
     }
 
-    checkSwaggerConfigFile(url){
-        if(url === "http://127.0.0.1:5500/server.json"){
-            return true;
-        }
-    }
-
     async requestInterceptor(request){
-        if(this.checkSwaggerConfigFile(request.url)){
-            return request;
-        }
-
         this.checkMessage();
 
         if(request.body){
@@ -76,10 +66,6 @@ export default class SwaggerProtoBuf {
     }
 
     async responseInterceptor(response){
-        if(this.checkSwaggerConfigFile(response.url)){
-            return response;
-        }
-
         this.checkMessage();
 
         if(response.data instanceof Blob) {
