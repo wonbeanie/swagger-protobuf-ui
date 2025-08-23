@@ -6,49 +6,46 @@ globalThis.SwaggerProtoBufUIBundle = (libraryObject, options) => {
     const swaggerProtoBuf = new SwaggerProtoBuf(libraryObject);
     const swaggerProtoMessage = new SwaggerProtoMessage();
 
+    const INTERCEPTOR_TYPE = Object.freeze({
+        REQUEST: 'req',
+        RESPONSE: 'res',
+    });
+
+    const createInterceptor = (type) => {
+        return async (httpContext) => {
+            const messageKey = `${type}Message`;
+            const message = swaggerProtoMessage[messageKey];
+
+            const interceptorKey = type === INTERCEPTOR_TYPE.REQUEST
+                ? `requestInterceptor`
+                : `responseInterceptor`;
+
+            try{
+                if(!isBlank(message)){
+                    swaggerProtoBuf.setMessage = message;
+
+                    httpContext = await swaggerProtoBuf[interceptorKey](httpContext);
+                }
+            }
+            catch(err){
+                console.error(err);
+            }
+
+            if(options[interceptorKey]){
+                httpContext = options[interceptorKey](httpContext);
+            }
+
+            return httpContext;
+        }
+    }
+
     SwaggerUIBundle({
         ...options,
         plugins: [
             swaggerProtoMessage.swaggerPlugin,
             options.plugins ? options.plugins : {}
         ],
-        requestInterceptor : async (request) => {
-            try{
-                const reqMessage = swaggerProtoMessage.reqMessage;
-                if(!isBlank(reqMessage)){
-                    swaggerProtoBuf.setMessage = reqMessage;
-
-                    request = await swaggerProtoBuf.requestInterceptor(request);
-                }
-            }
-            catch(err){
-                console.error(err);
-            }
-
-            if(options.requestInterceptor){
-                request = options.requestInterceptor(request);
-            }
-
-            return request;
-        },
-        responseInterceptor : async (response) => {
-            try{
-                const resMessage = swaggerProtoMessage.resMessage;
-                if(!isBlank(resMessage)){
-                    swaggerProtoBuf.setMessage = resMessage;
-
-                    response = await swaggerProtoBuf.responseInterceptor(response);                    
-                }
-            }
-            catch(err){
-                console.error(err);
-            }
-            
-            if(options.responseInterceptor){
-                response = options.responseInterceptor(response);
-            }
-
-            return response;
-        }
+        requestInterceptor : createInterceptor(INTERCEPTOR_TYPE.REQUEST),
+        responseInterceptor : createInterceptor(INTERCEPTOR_TYPE.RESPONSE)
     });
 }
