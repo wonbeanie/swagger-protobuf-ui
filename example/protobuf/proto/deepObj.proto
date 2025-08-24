@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package example;
+
+message Tag {
+  int32 id = 1;
+  string name = 2;
+}
+
+message Address {
+  string street = 1;
+  string city = 2;
+  string zip_code = 3;
+}
+
+message User {
+  int32 id = 1;
+  string name = 2;
+  
+  Address main_address = 3;
+  
+  repeated Tag tags = 4;
+}

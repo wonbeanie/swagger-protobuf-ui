@@ -7,8 +7,8 @@ const generatedDir = path.resolve(__dirname, '../generated');
 const entryFilePath = path.resolve(__dirname, '../index.js');
 
 // generated 디렉터리가 없으면 중단
-if (!fs.existsSync(generatedDir)) {
-  console.log('`generated` 디렉터리가 없습니다. 먼저 proto 파일을 컴파일해주세요.');
+if (fs.readdirSync(generatedDir).length === 0) {
+  console.log('`generated` 디렉터리가 비어있습니다. proto 파일을 먼저 컴파일해주세요.');
   process.exit(0);
 }
 
