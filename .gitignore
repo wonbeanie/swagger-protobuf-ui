@@ -1,3 +1,7 @@
 example/protobuf/node_modules
+example/protobuf/dist
+example/protobuf/generated
+example/protobuf/index.js
+
 example/server/node_modules
 node_modules
