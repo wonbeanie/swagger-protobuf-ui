@@ -5,10 +5,12 @@
 	"main": "index.js",
 	"scripts": {
 		"init" : "node scripts/init.js",
-		"compile": "npx protoc --js_out=import_style=commonjs,binary:./generated -I ./proto proto/*.proto",
+		"compile:descriptor" : "npx pbjs -t json -o ./generated/descriptor.json ./proto/*.proto",
+		"compile:proto": "npx protoc --js_out=import_style=commonjs,binary:./generated -I ./proto proto/*.proto",
+		"compile" : "npm run compile:descriptor && npm run compile:proto",
 		"create:entry": "node scripts/create-entry.js",
 		"bundle": "webpack",
-		"build": "npm run init &&npm run compile && npm run create:entry && npm run bundle"
+		"build": "npm run init && npm run compile && npm run create:entry && npm run bundle"
 	},
 	"keywords": [],
 	"author": "",

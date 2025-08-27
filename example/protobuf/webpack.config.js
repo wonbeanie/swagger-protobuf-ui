@@ -14,4 +14,12 @@ module.exports = {
 		libraryTarget: 'umd',
 		globalObject: 'this',
 	},
+	module: {
+        rules: [
+            {
+                test: /descriptor\.json$/,
+                type: 'asset/source',
+            }
+        ]
+    }
 };
