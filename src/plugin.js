@@ -2,7 +2,7 @@ export default class SwaggerProtoMessage {
     reqMessage = "";
     resMessage = "";
 
-    getPorotoMessageKey = (originalAction, system) => {
+    getProtoMessageKey = (originalAction, system) => {
         return (request) => {
             this.reqMessage = "";
             this.resMessage = "";
@@ -29,26 +29,10 @@ export default class SwaggerProtoMessage {
             statePlugins: {
                 spec: {
                     wrapActions: {
-                        executeRequest : this.getPorotoMessageKey
+                        executeRequest : this.getProtoMessageKey
                     }
                 }
             }
         }
-    }
-
-    set reqMessage(message){
-        this.reqMessage = message;
-    }
-
-    get reqMessage(){
-        return this.reqMessage;
-    }
-
-    set resMessage(message){
-        this.resMessage = message;
-    }
-
-    get resMessage(){
-        return this.resMessage;
     }
 }
