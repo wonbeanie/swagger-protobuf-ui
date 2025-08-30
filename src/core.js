@@ -5,7 +5,7 @@ export default class SwaggerProtoBuf {
 
     constructor({proto, descriptor}){
         this.#protobuf = proto;
-        this.#descriptor = descriptor.descriptor.nested;
+        this.#descriptor = descriptor.nested;
     }
 
     getDescriptorFields(messageName, namespace) {
