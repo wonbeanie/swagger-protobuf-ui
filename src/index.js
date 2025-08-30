@@ -43,7 +43,7 @@ globalThis.SwaggerProtoBufUIBundle = (libraryObject, options) => {
         ...options,
         plugins: [
             swaggerProtoMessage.swaggerPlugin,
-            options.plugins ? options.plugins : {}
+            ...(options.plugins || [])
         ],
         requestInterceptor : createInterceptor(INTERCEPTOR_TYPE.REQUEST),
         responseInterceptor : createInterceptor(INTERCEPTOR_TYPE.RESPONSE)
