@@ -20,7 +20,7 @@ const proto = protoContext.keys().reduce((acc, key) => {
 const descriptorContext = require.context('./generated', false, /\.json$/);
 const descriptor = descriptorContext.keys().reduce((acc, key) => {
   const name = key.replace(new RegExp('^\\.\\/(.*)\\.json$'), '$1');
-  acc[name] = JSON.parse(descriptorContext(key));
+  acc = JSON.parse(descriptorContext(key));
   return acc;
 }, {});
 
