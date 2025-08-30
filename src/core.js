@@ -33,8 +33,8 @@ export default class SwaggerProtoBuf {
 
             if(jsObject instanceof Array){
                 let protoInstanceList = [];
-                for (const key in jsObject){
-                    let protoData = await this.setProtoBufData(jsObject[key], message);
+                for (const arr of jsObject){
+                    let protoData = await this.setProtoBufData(arr, message);
                     protoInstanceList.push(protoData);
                 }
 
