@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Node.js Protobuf API",
-    "description": "사용자 정보를 Protobuf 형식으로 반환하는 간단한 REST API 명세입니다. 요청은 JSON으로 보내고 응답은 Protobuf로 받습니다.",
+    "title": "Node.js Protobuf API 명세",
+    "description": "Protobuf 형식을 사용하여 사용자를 관리하는 API입니다.",
     "version": "1.0.0"
   },
   "servers": [
@@ -14,15 +14,15 @@
   "paths": {
     "/users/{id}": {
       "get": {
-        "summary": "ID로 사용자 정보 조회",
-        "description": "특정 ID를 가진 사용자의 정보를 Protobuf 형식으로 직렬화하여 반환합니다.",
+        "summary": "ID로 사용자 조회 (Protobuf)",
+        "description": "ID를 사용하여 Protobuf 형식으로된 사용자 정보를 조회합니다.",
         "tags": ["Users"],
         "res_message" : "User",
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "조회할 사용자의 ID",
+            "description": "사용자 ID",
             "required": true,
             "schema": {
               "type": "integer",
@@ -49,14 +49,14 @@
     },
     "/users/{id}/info": {
       "get": {
-        "summary": "ID로 사용자 정보 조회",
-        "description": "특정 ID를 가진 사용자의 정보를 반환합니다.",
+        "summary": "ID로 사용자 조회 (JSON)",
+        "description": "ID를 사용하여 JSON 형식으로된 사용자 정보를 조회합니다.",
         "tags": ["Users"],
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "조회할 사용자의 ID",
+            "description": "사용자 ID",
             "required": true,
             "schema": {
               "type": "integer",
@@ -66,7 +66,7 @@
         ],
         "responses": {
           "200": {
-            "description": "성공적인 응답. 응답 본문은 json 데이터입니다.",
+            "description": "성공적인 응답. 응답 본문은 JSON 데이터입니다.",
             "content": {
               "application/json": {
                 "schema": {
@@ -84,12 +84,12 @@
     "/users": {
       "post": {
         "summary": "새로운 사용자 생성",
-        "description": "JSON 형식으로 사용자 정보를 받아 새 사용자를 생성하고, 생성된 사용자 정보를 Protobuf 형식으로 반환합니다.",
+        "description": "Protobuf 메시지로부터 새로운 사용자를 생성하고, 생성된 사용자 정보를 Protobuf 형식으로 반환합니다.",
         "tags": ["Users"],
         "req_message" : "User",
         "res_message" : "User",
         "requestBody": {
-          "description": "생성할 사용자의 이름과 이메일",
+          "description": "생성할 사용자 객체",
           "required": true,
           "content": {
             "application/protobuf": {
@@ -111,7 +111,7 @@
             }
           },
           "400": {
-            "description": "잘못된 요청 (이름 또는 이메일 누락)"
+            "description": "잘못된 요청"
           }
         }
       }
@@ -119,50 +119,93 @@
   },
   "components": {
     "schemas": {
-      "User": {
+      "Tag": {
         "type": "object",
-        "description": "사용자 정보를 나타내는 Protobuf 메시지 스키마",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int32",
-            "description": "사용자 고유 ID"
+            "example": 101
           },
           "name": {
             "type": "string",
-            "description": "사용자 이름"
-          },
-          "email": {
+            "example": "friend"
+          }
+        }
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "street": {
             "type": "string",
-            "format": "email",
-            "description": "사용자 이메일 주소"
+            "example": "456 Oak Ave"
+          },
+          "city": {
+            "type": "string",
+            "example": "Someville"
+          },
+          "zipCode": {
+            "type": "string",
+            "example": "67890"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "Alice"
+          },
+          "mainAddress": {
+            "$ref": "#/components/schemas/Address"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            }
           }
         }
       },
       "NewUserInput": {
         "type": "object",
-        "description": "사용자 생성을 위한 JSON 입력 스키마",
         "properties": {
           "name": {
             "type": "string",
-            "description": "사용자 이름",
-            "example": "Charlie"
+            "example": "Test User"
           },
-          "email": {
-            "type": "string",
-            "format": "email",
-            "description": "사용자 이메일 주소",
-            "example": "charlie@example.com"
+          "mainAddress": {
+            "$ref": "#/components/schemas/Address",
+            "example": {
+              "street": "123 Test St",
+              "city": "Testville",
+              "zipCode": "12345"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "example": [
+              { "id": 201, "name": "kw" },
+              { "id": 202, "name": "won" }
+            ]
           }
-        },
-        "required": ["name", "email"]
+        }
       }
     }
   },
   "tags": [
     {
       "name": "Users",
-      "description": "사용자 관련 API"
+      "description": "사용자 관리 API"
     }
   ]
 }
