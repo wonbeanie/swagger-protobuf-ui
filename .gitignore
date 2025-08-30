@@ -4,4 +4,8 @@ example/protobuf/generated
 example/protobuf/index.js
 
 example/server/node_modules
+example/server/proto
+
+example/web/proto
+
 node_modules
