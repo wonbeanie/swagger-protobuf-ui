@@ -26,8 +26,9 @@ npm run build // production로 번들링 시작
 #### 필수 import 파일
 [index.html](./example/web/index.html)
 
-- [proto.bundle.js](./example/web/proto.bundle.js)
-    - 프로토버퍼 번들 파일
+- proto.bundle.js
+    - 프로토버퍼 번들 파일 (데이터 파일 + descriptor 파일)
+    - [예시 번들 파일 번들링 방법](./example/protobuf/README.md)
 - [swagger-protobuf-core.js](./example/web/swagger-protobuf-core.js)
     - swagger-protobuf-ui-core 코어 파일
 - [swagger-initializer.js](./example/web/swagger-initializer.js)
@@ -36,7 +37,7 @@ npm run build // production로 번들링 시작
 ```
 <body>
     <!-- ... -->
-    <script src="./proto.bundle.js"></script>
+    <script src="./proto/proto.bundle.js"></script>
     <script src="./swagger-protobuf-ui-core.js"> </script>
     <script src="./swagger-initializer.js" charset="UTF-8"> </script>
 </body>
@@ -49,7 +50,7 @@ SwaggerUIBundle를 대체하여 SwaggerUI를 생성해주는 함수
 [swagger-initializer.js](./example/web/swagger-initializer.js)
 
 #### 매개변수
-1. ProtoLibraryObject
+1. [ProtoLibraryObject](./example/protobuf/webpack.config.js#L12)
     - 프로토버퍼로 생성된 js번들에서 사용되는 전역변수
 2. Options
     - SwaggerUiBundle의 Options와 동일함
