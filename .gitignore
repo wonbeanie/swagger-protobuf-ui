@@ -9,3 +9,5 @@ example/server/proto
 example/web/proto
 
 node_modules
+
+build
