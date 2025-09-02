@@ -1,13 +1,6 @@
 # swagger-protobuf-ui-bundle
 swagger-ui-bundle communicating by protobuf
 
-## 필수파일
-google-protobuf.js - 프로토버퍼를 사용하기위한 라이브러리<br/>
-swagger-ui-bundle.js - 스웨거를 사용하기위한 라이브러리
-
-[google-protobuf] https://github.com/protocolbuffers/protobuf-javascript<br/>
-[swagger-ui] https://github.com/swagger-api/swagger-ui/tree/master/dist
-
 ## 번들링 테스트 및 방법
 [webpack설정파일](./webpack.config.js)
 
