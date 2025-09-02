@@ -2,11 +2,6 @@
 Example of compiling protobuf into js
 
 ## 사용법
-### 필수 설치
-```
-npm install -g protoc-gen-js
-```
-
 ### 사용 순서
 1. /proto 폴더에 .proto파일(들)을 넣는다.
 2. npm i
