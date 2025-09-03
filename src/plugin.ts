@@ -2,8 +2,8 @@ export default class SwaggerProtoMessage {
     reqMessage = "";
     resMessage = "";
 
-    getProtoMessageKey = (originalAction, system) => {
-        return (request) => {
+    getProtoMessageKey = (originalAction : OriginalAction, system : System) => {
+        return (request : Request) => {
             this.reqMessage = "";
             this.resMessage = "";
             const spec = system.specSelectors.specJson().toJS();
@@ -11,8 +11,8 @@ export default class SwaggerProtoMessage {
             const pathName = request.pathName;
             const method = request.method;
 
-            const pathItem = spec.paths[pathName];
-            const operation = pathItem[method];
+            const pathItem = spec.paths[pathName] || {};
+            const operation = pathItem[method] || {};
             if (operation.req_message) {
                 this.reqMessage = operation.req_message;
             }
@@ -35,4 +35,29 @@ export default class SwaggerProtoMessage {
             }
         }
     }
+}
+
+type OpenAPISpec = {
+    paths : {
+        [pathName : string] : {
+            [method : string] : {
+                req_message ?: string,
+                res_message ?: string
+            }
+        }
+    }
+}
+
+type OriginalAction = (request : Request) => any;
+type System = {
+    specSelectors : {
+        specJson : () => {
+            toJS : () => OpenAPISpec
+        }
+    }
+}
+
+type Request = {
+    pathName : string,
+    method : string
 }
