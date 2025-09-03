@@ -1,7 +1,7 @@
 import SwaggerProtoMessage from "./plugin";
 import SwaggerProtoBuf from "./core";
 import {isBlank} from "./utils";
-import SwaggerUI from "swagger-ui-dist/swagger-ui-bundle.js";
+import {SwaggerUIBundle} from "swagger-ui-dist";
 import "swagger-ui-dist/swagger-ui.css";
 import "swagger-ui-dist/index.css";
 
@@ -42,7 +42,7 @@ globalThis.SwaggerProtoBufUIBundle = (libraryObject, options) => {
         }
     }
 
-    SwaggerUI({
+    SwaggerUIBundle({
         ...options,
         plugins: [
             swaggerProtoMessage.swaggerPlugin,
