@@ -26,6 +26,9 @@ module.exports = {
 
     ],
   },
+  resolve: {
+    extensions: ['.ts', '.js'],
+  },
   devServer: {
     static: './example/web',
     hot: true,
