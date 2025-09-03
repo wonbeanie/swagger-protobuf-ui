@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.ts',
 
   output: {
     path: path.resolve(__dirname, 'build'),
@@ -16,9 +16,14 @@ module.exports = {
         use: 'babel-loader',
       },
       {
+        test: /\.ts$/,
+        use: 'ts-loader',
+      },
+      {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
       },
+
     ],
   },
   devServer: {
