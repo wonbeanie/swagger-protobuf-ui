@@ -1,12 +1,12 @@
 export interface ProtoMessage {
-    serializeBinary(): Uint8Array;
+    serializeBinary(): BlobPart;
     toObject(): object;
     [key: string]: any;
 }
 
 export interface ProtoMessageConstructor {
     new(): ProtoMessage;
-    deserializeBinary(bytes: Uint8Array): ProtoMessage;
+    deserializeBinary(bytes: BlobPart): ProtoMessage;
 }
 
 export interface ProtoList {
@@ -14,9 +14,33 @@ export interface ProtoList {
 }
 
 export interface Descriptor {
-    nested?: {
-        [key: string]: any;
-    };
+    nested: DescriptorNested;
+}
+
+export interface DescriptorNested {
+    [pacakge: string]: DescriptorPackage;
+}
+
+export interface DescriptorPackage {
+    nested : DescriptorPackageNested;
+};
+
+export interface DescriptorPackageNested {
+    [message: string]: DescriptorMessage;
+}
+
+export interface DescriptorMessage {
+    fields : DescriptorFields;
+};
+
+export interface DescriptorFields {
+    [key : string] : FieldData
+}
+
+export type FieldData = {
+    type : string;
+    id : number;
+    rule : string;
 }
 
 export interface ProtobufLibrary {

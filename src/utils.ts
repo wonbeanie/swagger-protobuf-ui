@@ -1,4 +1,4 @@
-export function isBlank(str){
+export function isBlank(str: string){
     if (str === null) {
         return true;
     }

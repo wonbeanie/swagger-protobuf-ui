@@ -1,14 +1,21 @@
-export default class SwaggerProtoBuf {
-    #protobuf = null;
-    #descriptor = null;
-    #message = null;
+import type { SwaggerRequest, SwaggerResponse } from "swagger-ui-dist";
+import type { DescriptorFields, DescriptorNested, FieldData, ProtobufLibrary, ProtoList, ProtoMessage } from "./types/protobuf";
 
-    constructor({proto, descriptor}){
+export default class SwaggerProtoBuf {
+    #protobuf : ProtoList;
+    #descriptor : DescriptorNested;
+    #message = "";
+
+    constructor({proto, descriptor} : ProtobufLibrary){
         this.#protobuf = proto;
         this.#descriptor = descriptor.nested;
+
+        console.log(this.#descriptor);
     }
 
-    getDescriptorFields(messageName, namespace) {
+    // 리펙터링 필요
+    // typescript로써는 맞지 않는 구조임
+    getDescriptorFields(messageName : string, namespace : any) : any {
         if(namespace[messageName] && namespace[messageName].fields){
             return namespace[messageName].fields;
         }
@@ -25,21 +32,18 @@ export default class SwaggerProtoBuf {
         return null;
     }
 
-    async setProtoBufData(jsObject, message){
+    async setProtoBufData(jsObject : JsonObject, messageKey : string) : Promise<ProtoMessage>{
+        const message = this.#protobuf[messageKey];
+
+        if(!message){
+            throw new Error("Error : No appropriate message in ProtoBuffer");
+        }
+
+        const protoInstance = new message;
+
         try{
-            const protoInstance = new this.#protobuf[message];
-            const messageType = this.getDescriptorFields(message, this.#descriptor);
+            const messageType = this.getDescriptorFields(messageKey, this.#descriptor);
             const messageKeys = Object.keys(this.#protobuf);
-
-            if(jsObject instanceof Array){
-                let protoInstanceList = [];
-                for (const arr of jsObject){
-                    let protoData = await this.setProtoBufData(arr, message);
-                    protoInstanceList.push(protoData);
-                }
-
-                return protoInstanceList;
-            }
 
             for (const key in jsObject) {
                 let setterName = `set${key.charAt(0).toUpperCase() + key.slice(1)}`;
@@ -50,6 +54,17 @@ export default class SwaggerProtoBuf {
                 
                 if (protoInstance[setterName]) {
                     if(messageKeys.includes(messageType[key].type)){
+                        if(jsObject[key] instanceof Array){
+                            let protoInstanceList = [];
+                            for (const arr of jsObject[key]){
+                                let protoData = await this.setProtoBufData(arr, messageType[key].type);
+                                protoInstanceList.push(protoData);
+                            }
+
+                            protoInstance[setterName](protoInstanceList);
+                            continue;
+                        }
+
                         let instance = await this.setProtoBufData(jsObject[key], messageType[key].type);
                         protoInstance[setterName](instance);
                         continue;
@@ -61,29 +76,35 @@ export default class SwaggerProtoBuf {
             return protoInstance;
         }
         catch(err){
-            console.error(err);
+            throw err;
         }
     }
 
-    async getBlobToObject(blobData) {
+    async getBlobToObject(blobData : Blob) {
         try {
             const arrayBuffer = await blobData.arrayBuffer();
 
             const uint8Array = new Uint8Array(arrayBuffer);
+
+            const message = this.#protobuf[this.#message];
             
-            const userObject = this.#protobuf[this.#message].deserializeBinary(uint8Array);
+            if(!message){
+                throw new Error("Error : No appropriate message in ProtoBuffer");
+            }
+
+            const userObject = message.deserializeBinary(uint8Array);
 
             return userObject.toObject();
         } catch (err) {
-            console.error("Error : Protobuf deserializeBinary failed", err);
+            throw new Error("Protobuf deserializeBinary failed", { cause: err });
         }
     }
 
-    async getObjectToBlob(data) {
+    async getObjectToBlob(data : string) {
         try {
-            data = JSON.parse(data);
+            const requestData = JSON.parse(data);
 
-            let protoMessage = await this.setProtoBufData(data, this.#message);
+            let protoMessage = await this.setProtoBufData(requestData, this.#message);
 
             const encodedBuffer = protoMessage.serializeBinary();
 
@@ -91,7 +112,7 @@ export default class SwaggerProtoBuf {
 
             return result;
         } catch (err) {
-            console.error("Error : Protobuf serializeBinary failed", err);
+            throw new Error("Protobuf serializeBinary failed", { cause: err });
         }
     }
 
@@ -101,7 +122,7 @@ export default class SwaggerProtoBuf {
         }
     }
 
-    async requestInterceptor(request){
+    async requestInterceptor(request : SwaggerRequest){
         this.checkMessage();
 
         if(request.body){
@@ -111,7 +132,7 @@ export default class SwaggerProtoBuf {
         return request;
     }
 
-    async responseInterceptor(response){
+    async responseInterceptor(response : SwaggerResponse){
         this.checkMessage();
 
         if(response.data instanceof Blob) {
@@ -123,7 +144,11 @@ export default class SwaggerProtoBuf {
         return response;
     }
 
-    set setMessage(messageName){
+    set setMessage(messageName : string){
         this.#message = messageName;
     }
 }
+
+type JsonObject = {
+    [key : string] : any;
+};
