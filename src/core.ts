@@ -1,21 +1,17 @@
 import type { SwaggerRequest, SwaggerResponse } from "swagger-ui-dist";
-import type { DescriptorFields, DescriptorNested, FieldData, ProtobufLibrary, ProtoList, ProtoMessage } from "./types/protobuf";
+import type { DescriptorFields, DescriptorNode, ProtobufLibrary, ProtoList, ProtoMessage } from "./types/protobuf";
 
 export default class SwaggerProtoBuf {
     #protobuf : ProtoList;
-    #descriptor : DescriptorNested;
+    #descriptor : DescriptorNode;
     #message = "";
 
     constructor({proto, descriptor} : ProtobufLibrary){
         this.#protobuf = proto;
         this.#descriptor = descriptor.nested;
-
-        console.log(this.#descriptor);
     }
 
-    // 리펙터링 필요
-    // typescript로써는 맞지 않는 구조임
-    getDescriptorFields(messageName : string, namespace : any) : any {
+    getDescriptorFields(messageName : string, namespace : DescriptorNode) : DescriptorFields | null {
         if(namespace[messageName] && namespace[messageName].fields){
             return namespace[messageName].fields;
         }
@@ -43,6 +39,11 @@ export default class SwaggerProtoBuf {
 
         try{
             const messageType = this.getDescriptorFields(messageKey, this.#descriptor);
+
+            if(!messageType){
+                throw new Error(`Could not find descriptor for message type "${messageKey}"`);
+            }
+
             const messageKeys = Object.keys(this.#protobuf);
 
             for (const key in jsObject) {
@@ -53,6 +54,10 @@ export default class SwaggerProtoBuf {
                 }
                 
                 if (protoInstance[setterName]) {
+                    if(!messageType[key]){
+                        throw new Error(`Could not find descriptor for message type "${key}"`);
+                    }
+
                     if(messageKeys.includes(messageType[key].type)){
                         if(jsObject[key] instanceof Array){
                             let protoInstanceList = [];

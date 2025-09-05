@@ -13,25 +13,16 @@ export interface ProtoList {
     [key: string]: ProtoMessageConstructor;
 }
 
+export interface DescriptorNode {
+    [key : string ] : {
+        fields?: DescriptorFields;
+        nested?: { [key: string]: DescriptorNode };
+    };
+}
+
 export interface Descriptor {
-    nested: DescriptorNested;
+    nested: { [key: string]: DescriptorNode };
 }
-
-export interface DescriptorNested {
-    [pacakge: string]: DescriptorPackage;
-}
-
-export interface DescriptorPackage {
-    nested : DescriptorPackageNested;
-};
-
-export interface DescriptorPackageNested {
-    [message: string]: DescriptorMessage;
-}
-
-export interface DescriptorMessage {
-    fields : DescriptorFields;
-};
 
 export interface DescriptorFields {
     [key : string] : FieldData
