@@ -10,7 +10,7 @@ import "swagger-ui-dist/index.css";
 
 globalThis.SwaggerProtoBufUIBundle = (libraryObject : ProtobufLibrary, options : SwaggerConfigs) => {
     const swaggerProtoBuf = new SwaggerProtoBuf(libraryObject);
-    const swaggerProtoMessage : any = new SwaggerProtoMessage();
+    const swaggerProtoMessage : SwaggerProtoMessage = new SwaggerProtoMessage();
 
     const requestInterceptor = async (httpContext : SwaggerRequest) => {
         const message = swaggerProtoMessage.reqMessage;

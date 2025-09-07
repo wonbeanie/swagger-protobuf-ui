@@ -48,7 +48,7 @@ type OpenAPISpec = {
     }
 }
 
-type OriginalAction = (request : Request) => any;
+type OriginalAction = (request : Request) => unknown;
 type System = {
     specSelectors : {
         specJson : () => {
