@@ -1,5 +1,6 @@
 import type { SwaggerRequest, SwaggerResponse } from "swagger-ui-dist";
 import type { DescriptorFields, DescriptorNode, ProtobufLibrary, ProtoList, ProtoMessage } from "./types/protobuf";
+import { DeserializationError, NotFoundError, SerializationError } from "./custom-error";
 
 export default class SwaggerProtoBuf {
     #protobuf : ProtoList;
@@ -32,57 +33,52 @@ export default class SwaggerProtoBuf {
         const message = this.#protobuf[messageKey];
 
         if(!message){
-            throw new Error("Error : No appropriate message in ProtoBuffer");
+            throw new NotFoundError(`Could not find message type "${messageKey}" in ProtoBuffer`);
         }
 
         const protoInstance = new message;
 
-        try{
-            const messageType = this.getDescriptorFields(messageKey, this.#descriptor);
+        const messageType = this.getDescriptorFields(messageKey, this.#descriptor);
 
-            if(!messageType){
-                throw new Error(`Could not find descriptor for message type "${messageKey}"`);
+        if(!messageType){
+            throw new NotFoundError(`Could not find descriptor for message type "${messageKey}"`);
+        }
+
+        const messageKeys = Object.keys(this.#protobuf);
+
+        for (const key in jsObject) {
+            let setterName = `set${key.charAt(0).toUpperCase() + key.slice(1)}`;
+
+            if(jsObject[key] instanceof Array){
+                setterName += 'List';
             }
-
-            const messageKeys = Object.keys(this.#protobuf);
-
-            for (const key in jsObject) {
-                let setterName = `set${key.charAt(0).toUpperCase() + key.slice(1)}`;
-
-                if(jsObject[key] instanceof Array){
-                    setterName += 'List';
+            
+            if (protoInstance[setterName]) {
+                if(!messageType[key]){
+                    throw new NotFoundError(`Could not find descriptor for message type "${key}"`);
                 }
-                
-                if (protoInstance[setterName]) {
-                    if(!messageType[key]){
-                        throw new Error(`Could not find descriptor for message type "${key}"`);
-                    }
 
-                    if(messageKeys.includes(messageType[key].type)){
-                        if(jsObject[key] instanceof Array){
-                            let protoInstanceList = [];
-                            for (const arr of jsObject[key]){
-                                let protoData = await this.setProtoBufData(arr, messageType[key].type);
-                                protoInstanceList.push(protoData);
-                            }
-
-                            protoInstance[setterName](protoInstanceList);
-                            continue;
+                if(messageKeys.includes(messageType[key].type)){
+                    if(jsObject[key] instanceof Array){
+                        let protoInstanceList = [];
+                        for (const arr of jsObject[key]){
+                            let protoData = await this.setProtoBufData(arr, messageType[key].type);
+                            protoInstanceList.push(protoData);
                         }
 
-                        let instance = await this.setProtoBufData(jsObject[key], messageType[key].type);
-                        protoInstance[setterName](instance);
+                        protoInstance[setterName](protoInstanceList);
                         continue;
                     }
-                    protoInstance[setterName](jsObject[key]);
-                }
-            }
 
-            return protoInstance;
+                    let instance = await this.setProtoBufData(jsObject[key], messageType[key].type);
+                    protoInstance[setterName](instance);
+                    continue;
+                }
+                protoInstance[setterName](jsObject[key]);
+            }
         }
-        catch(err){
-            throw err;
-        }
+
+        return protoInstance;
     }
 
     async getBlobToObject(blobData : Blob) {
@@ -94,14 +90,14 @@ export default class SwaggerProtoBuf {
             const message = this.#protobuf[this.#message];
             
             if(!message){
-                throw new Error("Error : No appropriate message in ProtoBuffer");
+                throw new NotFoundError("No appropriate message in ProtoBuffer");
             }
 
             const userObject = message.deserializeBinary(uint8Array);
 
             return userObject.toObject();
         } catch (err) {
-            throw new Error("Protobuf deserializeBinary failed", { cause: err });
+            throw new DeserializationError("Protobuf deserializeBinary failed", { cause: err });
         }
     }
 
@@ -117,13 +113,13 @@ export default class SwaggerProtoBuf {
 
             return result;
         } catch (err) {
-            throw new Error("Protobuf serializeBinary failed", { cause: err });
+            throw new SerializationError("Protobuf serializeBinary failed", { cause: err });
         }
     }
 
     checkMessage(){
         if(!this.#message){
-            throw new Error("Error : No appropriate message in ProtoBuffer");
+            throw new NotFoundError("No appropriate message in ProtoBuffer");
         }
     }
 
