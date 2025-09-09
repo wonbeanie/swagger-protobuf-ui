@@ -17,9 +17,9 @@ export default class SwaggerProtoBuf {
             return namespace[messageName].fields;
         }
 
-        for (const key in namespace){
-            if (namespace[key] && namespace[key].nested){
-                const found = this.getDescriptorFields(messageName, namespace[key].nested);
+        for (const node of Object.values(namespace)){
+            if (node && node.nested){
+                const found = this.getDescriptorFields(messageName, node.nested);
                 if(found){
                     return found;
                 }
@@ -47,35 +47,36 @@ export default class SwaggerProtoBuf {
         const messageKeys = Object.keys(this.#protobuf);
 
         for (const key in jsObject) {
+            if(!messageType[key]){
+                throw new NotFoundError(`Could not find descriptor for field "${key}" in message "${messageKey}"`);
+            }
+
             let setterName = `set${key.charAt(0).toUpperCase() + key.slice(1)}`;
 
+            const type = messageType[key].type;
+
             if(jsObject[key] instanceof Array){
-                setterName += 'List';
-            }
-            
-            if (protoInstance[setterName]) {
-                if(!messageType[key]){
-                    throw new NotFoundError(`Could not find descriptor for message type "${key}"`);
+                if(!messageKeys.includes(type)){
+                    throw new NotFoundError(`Could not find message type "${type}" in ProtoBuffer`);
                 }
 
-                if(messageKeys.includes(messageType[key].type)){
-                    if(jsObject[key] instanceof Array){
-                        let protoInstanceList = [];
-                        for (const arr of jsObject[key]){
-                            let protoData = await this.setProtoBufData(arr, messageType[key].type);
-                            protoInstanceList.push(protoData);
-                        }
-
-                        protoInstance[setterName](protoInstanceList);
-                        continue;
-                    }
-
-                    let instance = await this.setProtoBufData(jsObject[key], messageType[key].type);
-                    protoInstance[setterName](instance);
-                    continue;
-                }
-                protoInstance[setterName](jsObject[key]);
+                setterName += "List";
+                const protoInstanceList = await Promise.all(
+                    jsObject[key].map((arr)=>{
+                        return this.setProtoBufData(arr, type);
+                    })
+                );
+                protoInstance[setterName](protoInstanceList);
+                continue;
             }
+
+            if(jsObject[key] instanceof Object){
+                let instance = await this.setProtoBufData(jsObject[key], type);
+                protoInstance[setterName](instance);
+                continue;
+            }
+
+            protoInstance[setterName](jsObject[key]);
         }
 
         return protoInstance;
