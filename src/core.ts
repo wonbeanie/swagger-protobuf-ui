@@ -2,16 +2,33 @@ import type { SwaggerRequest, SwaggerResponse } from "swagger-ui-dist";
 import type { DescriptorFields, DescriptorNode, ProtobufLibrary, ProtoList, ProtoMessage } from "./types/protobuf";
 import { DeserializationError, NotFoundError, SerializationError } from "./custom-error";
 
+/**
+ * ProtoBuf 데이터를 파싱하거나 객체로 변환하는 클래스
+ * Swagger의 Interceptor를 기반을 동작하며
+ * 로드된 .proto 파일의 proto 객체와 descriptor 객체를 사용하여 메세지를 변환합니다.
+ */
 export default class SwaggerProtoBuf {
     #protobuf : ProtoList;
     #descriptor : DescriptorNode;
     #message = "";
 
+    /**
+     * SwaggerProtoBuf의 새 인스턴스를 생성합니다.
+     * @param root proto.bundle.js를 통해 생성된 Root 객체.
+     * @param root.proto protobuf 데이터가 들어가 있는 객체
+     * @param root.descriptor descriptor 데이터가 들어가 있는 객체
+     */
     constructor({proto, descriptor} : ProtobufLibrary){
         this.#protobuf = proto;
         this.#descriptor = descriptor.nested;
     }
 
+    /**
+     * 주어진 namespace를 재귀적으로 탐색하여 일치하는 메세지의 filed를 추출합니다.
+     * @param messageName 추출할 메세지 이름
+     * @param namespace 검색을 시작할 최상위 descriptor
+     * @returns 추출된 Field, 찾지 못하면 null을 반환
+     */
     getDescriptorFields(messageName : string, namespace : DescriptorNode) : DescriptorFields | null {
         if(namespace[messageName] && namespace[messageName].fields){
             return namespace[messageName].fields;
@@ -29,7 +46,12 @@ export default class SwaggerProtoBuf {
         return null;
     }
 
-    async setProtoBufData(jsObject : JsonObject, messageKey : string) : Promise<ProtoMessage>{
+    /**
+     * js객체을 Descriptor를 이용하여 ProtoBuf 객체로 변환하는 함수
+     * @param jsObject 변환할 객체
+     * @param messageKey 변환할 최상위 메세지 이름
+     */
+    async setProtoBufData(jsObject : jsObject, messageKey : string) : Promise<ProtoMessage>{
         const message = this.#protobuf[messageKey];
 
         if(!message){
@@ -82,6 +104,11 @@ export default class SwaggerProtoBuf {
         return protoInstance;
     }
 
+    /**
+     * Blob 객체을 역직렬화를 통해 js객체로 변환하는 함수
+     * @param blobData 역직렬화될 Blob 객체
+     * @returns Blob 객체가 역직렬화된 js객체
+     */
     async getBlobToObject(blobData : Blob) {
         try {
             const arrayBuffer = await blobData.arrayBuffer();
@@ -102,6 +129,11 @@ export default class SwaggerProtoBuf {
         }
     }
 
+    /**
+     * JSON 문자열을 직렬화하여 Blob 객체로 변환하는 함수
+     * @param data 직렬화될 JSON 문자열
+     * @returns data가 직렬화된 Blob 객체
+     */
     async getObjectToBlob(data : string) {
         try {
             const requestData = JSON.parse(data);
@@ -124,6 +156,12 @@ export default class SwaggerProtoBuf {
         }
     }
 
+    /**
+     * Swagger-UI 요청 인터셉터입니다.
+     * 요청 본문이 존재할경우, 이를 Blob으로 직렬화하여 요청 객체를 수정합니다.
+     * @param {SwaggerRequest} request Swagger-UI에서 보낸 요청 객체
+     * @returns {Promise<SwaggerRequest>} body가 직렬화된 요청 객체
+     */
     async requestInterceptor(request : SwaggerRequest){
         this.checkMessage();
 
@@ -134,6 +172,12 @@ export default class SwaggerProtoBuf {
         return request;
     }
 
+    /**
+     * Swagger-UI 응답 인터셉터입니다.
+     * 응답 data가 Blob 객체일 경우, 이를 역직렬화하여 요청 객체를 수정합니다.
+     * @param response Swagger-UI에서 보낸 응답 객체
+     * @returns data가 역직렬화된 응답 객체
+     */
     async responseInterceptor(response : SwaggerResponse){
         this.checkMessage();
 
@@ -151,6 +195,6 @@ export default class SwaggerProtoBuf {
     }
 }
 
-type JsonObject = {
+type jsObject = {
     [key : string] : any;
 };
