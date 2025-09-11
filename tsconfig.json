@@ -18,7 +18,8 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "allowJs": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "noEmit": true
   },
   "include": ["src/**/*", "src/types/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
