@@ -124,10 +124,9 @@ echo "✅ (7/8) Web 예제를 프로덕션 빌드로 테스트합니다..."
 cp -r build/* example/web/
 
 # 7-2. npx serve로 정적 파일 서버 실행
-cd example/web
 # 백그라운드에서 serve 실행
 set -m
-npx serve -s . -l 8080 &
+npx serve -s example/web/ -l 8080 &
 SERVE_PID=$!
 set +m
 
@@ -135,7 +134,6 @@ set +m
 sleep 10
 # 웹이 잘 나오는지 확인
 curl -f http://localhost:8080 | grep '<div id="swagger-ui"></div>'
-cd ../../ # 다시 최상단으로 이동
 
 echo "✅ serve를 이용한 상용 빌드 파일 테스트 완료"
 
