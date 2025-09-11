@@ -101,7 +101,7 @@ npm install
 # 4-3. webpack dev 서버를 백그라운드에서 실행
 # PID 저장
 set -m
-npm run start &
+npm run start:test &
 WEB_SERVER_PID=$!
 set +m
 # 서버가 완전히 켜질 때까지 잠시 대기
