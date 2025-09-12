@@ -22,8 +22,6 @@ npm run build // production로 번들링 시작
 - proto.bundle.js
     - 프로토버퍼 번들 파일 (데이터 파일 + descriptor 파일)
     - [예시 번들 파일 번들링 방법](./example/protobuf/README.md)
-- [swagger-protobuf-core.js](./example/web/swagger-protobuf-core.js)
-    - swagger-protobuf-ui-core 코어 파일
 - [swagger-initializer.js](./example/web/swagger-initializer.js)
     - SwaggerProtoBufUIBundle 초기화 파일
 
@@ -31,7 +29,6 @@ npm run build // production로 번들링 시작
 <body>
     <!-- ... -->
     <script src="./proto/proto.bundle.js"></script>
-    <script src="./swagger-protobuf-ui-core.js"> </script>
     <script src="./swagger-initializer.js" charset="UTF-8"> </script>
 </body>
 ```
