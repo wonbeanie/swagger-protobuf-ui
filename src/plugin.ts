@@ -1,3 +1,5 @@
+import type { OriginalAction, Request, System } from "./types/plugin";
+
 export default class SwaggerProtoMessage {
     reqMessage = "";
     resMessage = "";
@@ -35,29 +37,4 @@ export default class SwaggerProtoMessage {
             }
         }
     }
-}
-
-type OpenAPISpec = {
-    paths : {
-        [pathName : string] : {
-            [method : string] : {
-                req_message ?: string,
-                res_message ?: string
-            }
-        }
-    }
-}
-
-type OriginalAction = (request : Request) => unknown;
-type System = {
-    specSelectors : {
-        specJson : () => {
-            toJS : () => OpenAPISpec
-        }
-    }
-}
-
-type Request = {
-    pathName : string,
-    method : string
 }
