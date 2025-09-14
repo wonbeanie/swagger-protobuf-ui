@@ -31,7 +31,7 @@ export interface DescriptorFields {
 export type FieldData = {
     type : string;
     id : number;
-    rule : string;
+    rule ?: string;
 }
 
 export interface ProtobufLibrary {
