@@ -11,7 +11,7 @@
     "build": "webpack --mode production",
     "start": "webpack serve --open --mode development",
     "start:test": "webpack serve --mode development",
-    "test": "jest"
+    "test": "npx jest --verbose"
   },
   "keywords": [],
   "author": "",
