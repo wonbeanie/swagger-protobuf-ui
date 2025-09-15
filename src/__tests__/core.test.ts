@@ -1,6 +1,7 @@
 import type { SwaggerRequest } from "swagger-ui-dist";
 import SwaggerProtoBuf, * as core from "../core";
 import type { Descriptor } from "../types/protobuf";
+import { InvalidSetterError, NotFoundError, SerializationError } from "../custom-error";
 
 const mockProto = {
     User: jest.fn().mockImplementation(() => ({
@@ -74,9 +75,13 @@ describe('core.ts 테스트', () => {
       descriptor: mockDescriptor,
    });
 
+   afterEach(() => {
+      jest.clearAllMocks();
+   });
+
    describe('Request 테스트', () => {
       describe("setProtoBufData 테스트", ()=>{
-         test("body를 정상적으로 보낼을때를 검증한다.", async () => {
+         test("body 데이터가 정상적일때 기능 검증", async () => {
             const message = "User";
          
             const protoInstance = await swaggerProtoBuf.setProtoBufData(mockBodyData, message);
@@ -90,16 +95,54 @@ describe('core.ts 테스트', () => {
 
             expect(mockProto.Address).toHaveBeenCalledTimes(1);
             expect(protoInstance.setAddress).toHaveBeenCalledTimes(1);
-         })
+         });
+
+         test("올바르지 않는 메시지키일때의 에러 검증",async () => {
+            const message = "Address";
+
+            await expect(swaggerProtoBuf.setProtoBufData(mockBodyData, message)).rejects.
+            toThrow(NotFoundError);
+         });
+
+         test("메세지 타입과 맞지 않는 body 데이터일때 에러 검증",async () => {
+            const message = "User";
+
+            await expect(swaggerProtoBuf.setProtoBufData({
+               name: "user",
+               id: 1,
+               tags : {name : "tag1"},
+               address : {
+                  street : "street",
+                  city : "city"
+               }
+            }, message)).rejects.
+            toThrow(InvalidSetterError);
+         });
       });
 
-      test("getObjectToBlob 테스트",async ()=>{
-         swaggerProtoBuf.setMessage = "User";
+      describe("getObjectToBlob", ()=>{
+         test("body 데이터가 정상적일때 기능 검증",async ()=>{
+            swaggerProtoBuf.setMessage = "User";
 
-         const blob = await swaggerProtoBuf.getObjectToBlob(JSON.stringify(mockBodyData));
+            const blob = await swaggerProtoBuf.getObjectToBlob(JSON.stringify(mockBodyData));
 
-         expect(blob).toBeInstanceOf(Blob);
-      });
+            expect(blob).toBeInstanceOf(Blob);
+         });
+
+         test("올바르지 않는 메시지키일때의 에러 검증",async ()=>{
+            swaggerProtoBuf.setMessage = "Address";
+
+            await expect(swaggerProtoBuf.getObjectToBlob(JSON.stringify(mockBodyData))).rejects.
+            toThrow(SerializationError);
+         });
+
+         test("객체가 아닌 문자열일때의 에러 검증",async ()=>{
+            swaggerProtoBuf.setMessage = "User";
+
+            await expect(swaggerProtoBuf.getObjectToBlob("test data string")).rejects.
+            toThrow(SerializationError);
+         });
+      })
 
       test("requestInterceptor 테스트", async () => {
          swaggerProtoBuf.setMessage = "User";
