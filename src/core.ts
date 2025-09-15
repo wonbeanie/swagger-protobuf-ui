@@ -1,6 +1,6 @@
 import type { SwaggerRequest, SwaggerResponse } from "swagger-ui-dist";
 import type { DescriptorFields, DescriptorNode, ProtobufLibrary, ProtoList, ProtoMessage } from "./types/protobuf";
-import { DeserializationError, NotFoundError, SerializationError } from "./custom-error";
+import { DeserializationError, InvalidSetterError, NotFoundError, SerializationError } from "./custom-error";
 
 /**
  * ProtoBuf 데이터를 파싱하거나 객체로 변환하는 클래스
@@ -88,20 +88,30 @@ export default class SwaggerProtoBuf {
                         return this.setProtoBufData(arr, type);
                     })
                 );
-                protoInstance[setterName](protoInstanceList);
+
+                setInstanceValue(setterName, protoInstanceList);
                 continue;
             }
 
             if(jsObject[key] instanceof Object){
                 let instance = await this.setProtoBufData(jsObject[key], type);
-                protoInstance[setterName](instance);
+
+                setInstanceValue(setterName, instance);
                 continue;
             }
 
-            protoInstance[setterName](jsObject[key]);
+            setInstanceValue(setterName, jsObject[key])
         }
 
         return protoInstance;
+
+        function setInstanceValue(setter : string, value : unknown){
+            if(!protoInstance[setter]){
+                throw new InvalidSetterError(`Invalid setter "${setter}" for message "${messageKey}"`);
+            }
+
+            protoInstance[setter](value);
+        }
     }
 
     /**
