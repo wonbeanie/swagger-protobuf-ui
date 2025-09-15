@@ -18,3 +18,10 @@ export class SerializationError extends Error {
         this.name = "SerializationError";
     }
 }
+
+export class InvalidSetterError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = "InvalidSetterError";
+    }
+}
