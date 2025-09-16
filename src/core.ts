@@ -120,16 +120,16 @@ export default class SwaggerProtoBuf {
      * @returns Blob 객체가 역직렬화된 js객체
      */
     async getBlobToObject(blobData : Blob) {
+        const message = this.#protobuf[this.#message];
+
+        if(!message){
+            throw new NotFoundError(`Could not find message type "${this.#message}" in ProtoBuffer`);
+        }
+
         try {
             const arrayBuffer = await blobData.arrayBuffer();
 
             const uint8Array = new Uint8Array(arrayBuffer);
-
-            const message = this.#protobuf[this.#message];
-            
-            if(!message){
-                throw new NotFoundError("No appropriate message in ProtoBuffer");
-            }
 
             const userObject = message.deserializeBinary(uint8Array);
 
