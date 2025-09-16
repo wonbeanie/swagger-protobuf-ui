@@ -89,8 +89,50 @@ describe('core.ts 테스트', () => {
    });
 
    describe('responseInterceptor 테스트', () => {
-      test("",()=>{
-         
-      })
+      describe("getBlobToObject 테스트",()=>{
+
+         test("User 메세지일때 기능 검증",async () => {
+            swaggerProtoBuf.setMessage = "User";
+
+            const data = await swaggerProtoBuf.getBlobToObject(mockBlob);
+
+            expect(UserMock.deserializeBinary).toHaveBeenCalledTimes(1);
+            expect(mockUserInstance.toObject).toHaveBeenCalledTimes(1);
+            expect(data).toEqual(mockBodyData);
+         });
+
+         test("메세지키를 찾을수 없을때의 오류 검증",async () => {
+            swaggerProtoBuf.setMessage = "Error";
+
+            await expect(swaggerProtoBuf.getBlobToObject(mockBlob)).rejects.
+            toThrow(NotFoundError);
+         });
+
+         test("deserializeBinary가 실패할때의 오류 검증",async () => {
+            swaggerProtoBuf.setMessage = "User";
+
+            const mockDeserializeBinary = UserMock.deserializeBinary;
+
+            UserMock.deserializeBinary = jest.fn().mockImplementation(() => {
+               throw new Error();
+            });
+
+            const mockBlob = new Blob([JSON.stringify(mockBodyData)], { type: 'application/octet-stream' });
+
+            await expect(swaggerProtoBuf.getBlobToObject(mockBlob)).rejects.
+            toThrow(DeserializationError);
+
+            UserMock.deserializeBinary = mockDeserializeBinary;
+         });
+
+         test("responseInterceptor 테스트", async () => {
+            swaggerProtoBuf.setMessage = "User";
+            const response = await swaggerProtoBuf.responseInterceptor(mockSwaggerResponse);
+
+            expect(response).toBeInstanceOf(Object);
+            expect(response.data).toBeInstanceOf(Object);
+            expect(typeof response.text).toEqual("string");
+         });
+      });
    });
 });
