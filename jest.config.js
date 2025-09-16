@@ -8,5 +8,9 @@ module.exports = {
   transform: {
     ...tsJestTransformCfg,
   },
-  testPathIgnorePatterns: ["/node_modules/", "/scripts/temp_test_protject"],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/scripts/temp_test_protject",
+    "/__tests__/mocks"
+  ],
 };
