@@ -9,6 +9,7 @@ describe('core.ts 테스트', () => {
    });
 
    afterEach(() => {
+      swaggerProtoBuf.setMessage = "";
       jest.clearAllMocks();
    });
 
@@ -60,6 +61,7 @@ describe('core.ts 테스트', () => {
             const blob = await swaggerProtoBuf.getObjectToBlob(JSON.stringify(mockBodyData));
 
             expect(blob).toBeInstanceOf(Blob);
+            expect(mockUserInstance.serializeBinary).toHaveBeenCalledTimes(1);
          });
 
          test("올바르지 않는 메시지키일때의 에러 검증",async ()=>{
