@@ -103,3 +103,12 @@ export const mockSwaggerResponse = {
    data: mockBlob,
    text : JSON.stringify(mockBlob)
 } as SwaggerResponse;
+
+
+export const mockOptions = {
+   dom_id: '#swagger-ui',
+   url: 'https://localhost/segger.json',
+   requestInterceptor: jest.fn(req => req),
+   responseInterceptor: jest.fn(res => res),
+   plugins: [{ someOtherPlugin: 'foo' }],
+};
