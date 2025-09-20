@@ -105,10 +105,16 @@ export const mockSwaggerResponse = {
 } as SwaggerResponse;
 
 
-export const mockOptions = {
+export const mockOptions : {
+   dom_id: string;
+   url: string;
+   requestInterceptor ?: jest.Func;
+   responseInterceptor ?: jest.Func;
+   plugins: any[];
+} = {
    dom_id: '#swagger-ui',
    url: 'https://localhost/segger.json',
    requestInterceptor: jest.fn(req => req),
    responseInterceptor: jest.fn(res => res),
    plugins: [{ someOtherPlugin: 'foo' }],
-};
+}

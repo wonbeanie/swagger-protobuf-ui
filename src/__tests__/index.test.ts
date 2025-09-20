@@ -1,5 +1,14 @@
 import { SwaggerUIBundle } from "swagger-ui-dist";
 import { mockBlob, mockBodyData, mockDescriptor, mockOptions, mockProto, mockSwaggerRequest, mockSwaggerResponse, mockUserInstance, UserMock } from "./mocks/proto-mock";
+import SwaggerProtoBuf from "../core";
+import SwaggerProtoMessage from "../plugin";
+
+const mockSetMessage = jest.fn();
+const mockRequestInterceptor = jest.fn(req => Promise.resolve(req));
+const mockResponseInterceptor = jest.fn(res => Promise.resolve(res));
+
+const MockedSwaggerProtoMessage = SwaggerProtoMessage as jest.MockedClass<typeof SwaggerProtoMessage>;
+const MockedSwaggerUIBundle = SwaggerUIBundle as unknown as jest.Mock;
 
 jest.mock('swagger-ui-dist', () => ({
   SwaggerUIBundle: jest.fn(),
@@ -23,7 +32,19 @@ jest.mock('../plugin', () => {
   })
 });
 
-const MockedSwaggerUIBundle = SwaggerUIBundle as unknown as jest.Mock;
+jest.mock('../core', () => {
+    return jest.fn().mockImplementation(() => {
+        const instance = {
+            requestInterceptor: mockRequestInterceptor,
+            responseInterceptor: mockResponseInterceptor,
+        };
+        Object.defineProperty(instance, 'setMessage', {
+            set: mockSetMessage,
+            configurable: true
+        });
+        return instance;
+    });
+})
 
 describe('index.ts 테스트', () => {
     const libraryObject = {
@@ -37,6 +58,10 @@ describe('index.ts 테스트', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        jest.clearAllMocks();
+        mockSetMessage.mockClear();
+        mockRequestInterceptor.mockClear();
+        mockResponseInterceptor.mockClear();
     });
 
     it('SwaggerUIBundle 호출, 옵션 초기화, 인터셉트 테스트', () => {
@@ -53,4 +78,50 @@ describe('index.ts 테스트', () => {
         expect(typeof bundleConfig.requestInterceptor).toBe('function');
         expect(typeof bundleConfig.responseInterceptor).toBe('function');
     });
+
+    describe("Request Interceptor 테스트",() => {
+        test("option과 swaggerProtoBuf requestInterceptor 호출 검증", async () => {
+            const mockProtoMessageInstance = new MockedSwaggerProtoMessage();
+            mockProtoMessageInstance.reqMessage = 'User';
+            (SwaggerProtoMessage as jest.Mock).mockImplementation(() => mockProtoMessageInstance);
+
+            globalThis.SwaggerProtoBufUIBundle(libraryObject, mockOptions);
+            const bundleConfig = MockedSwaggerUIBundle.mock.calls[0][0];
+
+            const result = await bundleConfig.requestInterceptor(mockSwaggerRequest);
+            
+            expect(mockSetMessage).toHaveBeenCalledWith('User');
+            expect(mockRequestInterceptor).toHaveBeenCalledTimes(1);
+            expect(mockOptions.requestInterceptor).toHaveBeenCalled();
+            expect(result).toBe(mockSwaggerRequest);
+        });
+
+        test("options에 requestInterceptor가 없을때", async () => {
+            globalThis.SwaggerProtoBufUIBundle(libraryObject, {
+                ...mockOptions,
+                requestInterceptor: undefined
+            });
+
+            const bundleConfig = MockedSwaggerUIBundle.mock.calls[0][0];
+            await bundleConfig.requestInterceptor(mockSwaggerRequest);
+
+            expect(mockOptions.requestInterceptor).not.toHaveBeenCalled();
+        });
+
+        test("메세지가 없을때", async () => {
+            const mockProtoMessageInstance = new MockedSwaggerProtoMessage();
+            mockProtoMessageInstance.reqMessage = '';
+            (SwaggerProtoMessage as jest.Mock).mockImplementation(() => mockProtoMessageInstance);
+
+
+            globalThis.SwaggerProtoBufUIBundle(libraryObject, mockOptions);
+            const bundleConfig = MockedSwaggerUIBundle.mock.calls[0][0];
+            await bundleConfig.requestInterceptor(mockSwaggerRequest);
+
+            expect(mockRequestInterceptor).not.toHaveBeenCalled();
+            expect(mockOptions.requestInterceptor).toHaveBeenCalled();
+        });
+    })
+
+
 });
