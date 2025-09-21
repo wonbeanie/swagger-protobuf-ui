@@ -123,5 +123,47 @@ describe('index.ts 테스트', () => {
         });
     })
 
+    describe("Response Interceptor 테스트",() => {
+        test("option과 swaggerProtoBuf responseInterceptor 호출 검증", async () => {
+            const mockProtoMessageInstance = new MockedSwaggerProtoMessage();
+            mockProtoMessageInstance.resMessage = 'User';
+            (SwaggerProtoMessage as jest.Mock).mockImplementation(() => mockProtoMessageInstance);
+
+            globalThis.SwaggerProtoBufUIBundle(libraryObject, mockOptions);
+            const bundleConfig = MockedSwaggerUIBundle.mock.calls[0][0];
+
+            const result = await bundleConfig.responseInterceptor(mockSwaggerResponse);
+            
+            expect(mockSetMessage).toHaveBeenCalledWith('User');
+            expect(mockResponseInterceptor).toHaveBeenCalledTimes(1);
+            expect(mockOptions.responseInterceptor).toHaveBeenCalled();
+            expect(result).toBe(mockSwaggerResponse);
+        });
+
+        test("options에 responseInterceptor가 없을때", async () => {
+            globalThis.SwaggerProtoBufUIBundle(libraryObject, {
+                ...mockOptions,
+                responseInterceptor: undefined
+            });
+
+            const bundleConfig = MockedSwaggerUIBundle.mock.calls[0][0];
+            await bundleConfig.responseInterceptor(mockSwaggerResponse);
+
+            expect(mockOptions.responseInterceptor).not.toHaveBeenCalled();
+        });
+
+        test("메세지가 없을때", async () => {
+            const mockProtoMessageInstance = new MockedSwaggerProtoMessage();
+            mockProtoMessageInstance.resMessage = '';
+            (SwaggerProtoMessage as jest.Mock).mockImplementation(() => mockProtoMessageInstance);
+
+            globalThis.SwaggerProtoBufUIBundle(libraryObject, mockOptions);
+            const bundleConfig = MockedSwaggerUIBundle.mock.calls[0][0];
+            await bundleConfig.responseInterceptor(mockSwaggerResponse);
+
+            expect(mockResponseInterceptor).not.toHaveBeenCalled();
+            expect(mockOptions.responseInterceptor).toHaveBeenCalled();
+        });
+    })
 
 });
