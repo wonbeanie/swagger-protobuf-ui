@@ -11,6 +11,7 @@ export default class SwaggerProtoBuf {
     #protobuf : ProtoList;
     #descriptor : DescriptorNode;
     #message = "";
+    ARRAY_INDEX_FLAG = "List";
 
     /**
      * SwaggerProtoBuf의 새 인스턴스를 생성합니다.
@@ -82,7 +83,7 @@ export default class SwaggerProtoBuf {
                     throw new NotFoundError(`Could not find message type "${type}" in ProtoBuffer`);
                 }
 
-                setterName += "List";
+                setterName += this.ARRAY_INDEX_FLAG;
                 const protoInstanceList = await Promise.all(
                     jsObject[key].map((arr)=>{
                         return this.setProtoBufData(arr, type);
@@ -115,6 +116,33 @@ export default class SwaggerProtoBuf {
     }
 
     /**
+     * 역직렬화된 Message를 Array setter에 사용된 "ARRAY_INDEX_FLAG"를
+     * 제거하여 jsObject로 변환하는 함수
+     * @param data Message.toObject의 반환값
+     * @returns descriptor에 맞게 변환된 함수
+     */
+    messageToObject(data : jsObject){
+        let result : jsObject = {};
+        Object.keys(data).forEach((key)=>{
+            if(data[key] instanceof Array){
+                let keyName = key.replace(this.ARRAY_INDEX_FLAG, "");
+
+                result[keyName] = data[key].map((arr)=>{
+                    return this.messageToObject(arr);
+                });
+            }
+            else if(data[key] instanceof Object){
+                result[key] = this.messageToObject(data[key]);
+            }
+            else {
+                result[key] = data[key];
+            }
+        });
+
+        return result;
+    }
+
+    /**
      * Blob 객체을 역직렬화를 통해 js객체로 변환하는 함수
      * @param blobData 역직렬화될 Blob 객체
      * @returns Blob 객체가 역직렬화된 js객체
@@ -131,9 +159,9 @@ export default class SwaggerProtoBuf {
 
             const uint8Array = new Uint8Array(arrayBuffer);
 
-            const userObject = message.deserializeBinary(uint8Array);
+            const protoMessage = message.deserializeBinary(uint8Array);
 
-            return userObject.toObject();
+            return this.messageToObject(protoMessage.toObject());
         } catch (err) {
             throw new DeserializationError("Protobuf deserializeBinary failed", { cause: err });
         }
