@@ -11,7 +11,8 @@ module.exports = {
   testPathIgnorePatterns: [
     "/node_modules/",
     "/scripts/temp_test_protject",
-    "/__tests__/mocks"
+    "/__tests__/mocks",
+    "/__tests__/test-data",
   ],
   moduleNameMapper: {
     "\\.css$": "<rootDir>/src/__tests__/mocks/css-mock.ts",
