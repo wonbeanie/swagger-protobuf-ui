@@ -14,6 +14,26 @@ export const mockBodyData = {
    }
 };
 
+export const testDataBody = {
+   "id" : 1,
+  "name": "Test User",
+  "mainAddress": {
+    "street": "456 Oak Ave",
+    "city": "Someville",
+    "zipCode": "67890"
+  },
+  "tags": [
+    {
+      "id": 201,
+      "name": "kw"
+    },
+    {
+      "id": 202,
+      "name": "won"
+    }
+  ]
+};
+
 export const mockSerializedPayload = JSON.stringify(mockBodyData);
 
 export const mockBlob = new Blob([mockSerializedPayload], { type: 'application/octet-stream' });
@@ -103,7 +123,6 @@ export const mockSwaggerResponse = {
    data: mockBlob,
    text : JSON.stringify(mockBlob)
 } as SwaggerResponse;
-
 
 export const mockOptions : {
    dom_id: string;
