@@ -13,3 +13,5 @@ scripts/temp_test_protject
 node_modules
 
 build
+
+coverage

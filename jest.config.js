@@ -17,4 +17,9 @@ module.exports = {
   moduleNameMapper: {
     "\\.css$": "<rootDir>/src/__tests__/mocks/css-mock.ts",
   },
+  coveragePathIgnorePatterns: [
+    "/__tests__/mocks",
+    "/__tests__/test-data",
+    "/types"
+  ],
 };
