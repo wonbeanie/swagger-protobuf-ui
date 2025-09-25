@@ -1,5 +1,6 @@
 import SwaggerProtoBuf, * as core from "../core";
 import { DeserializationError, InvalidSetterError, NotFoundError, SerializationError } from "../custom-error";
+import type { Descriptor } from "../types/protobuf";
 import { mockBlob, mockBodyData, mockDescriptor, mockProto, mockSwaggerRequest, mockSwaggerResponse, mockUserInstance, UserMock } from "./mocks/proto-mock";
 
 describe('core.ts 테스트', () => {
@@ -51,6 +52,54 @@ describe('core.ts 테스트', () => {
                }
             }, message)).rejects.
             toThrow(InvalidSetterError);
+         });
+
+         test("descriptor와 proto가 일치하지 않을때 에러 검증",async () => {
+            const mockNoDescriptor = new SwaggerProtoBuf({
+               proto: mockProto as any,
+               descriptor: {
+                  nested: {},
+               }
+            });
+
+            const message = "User";
+
+            await expect(mockNoDescriptor.setProtoBufData(mockBodyData, message)).rejects.
+            toThrow(NotFoundError);
+         });
+
+         test("배열일때 descriptor에서 정의된 타입과 proto의 키가 일치하지 않을때 에러 검증",async () => {
+            const mockInconsistencyDescriptor = new SwaggerProtoBuf({
+               proto: mockProto as any,
+               descriptor: {
+                  nested: {
+                     User: {
+                        fields: {
+                           tags: { "rule": "repeated", "type": "Tags" },
+                        },
+                     }
+                  },
+               } as Descriptor
+            });
+
+            const message = "User";
+
+            const mockBodyErrorData = {
+               tags : [
+                  {name : "tag1"},
+                  {name : "tag2"}
+               ]
+            };
+
+            await expect(mockInconsistencyDescriptor.setProtoBufData(mockBodyErrorData, message)).rejects.
+            toThrow(NotFoundError);
+         });
+
+         test("존재하지 않는 메시지키일때의 에러 검증",async () => {
+            const message = "";
+
+            await expect(swaggerProtoBuf.setProtoBufData(mockBodyData, message)).rejects.
+            toThrow(NotFoundError);
          });
       });
 
@@ -134,5 +183,11 @@ describe('core.ts 테스트', () => {
             expect(typeof response.text).toEqual("string");
          });
       });
+   });
+
+   test("메세지키를 설정하지 않았을때 오류 테스트",() => {
+      swaggerProtoBuf.setMessage = "";
+
+      expect(() => swaggerProtoBuf.checkMessage()).toThrow(NotFoundError);
    });
 });
