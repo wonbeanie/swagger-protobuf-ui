@@ -121,6 +121,26 @@ describe('index.ts 테스트', () => {
             expect(mockRequestInterceptor).not.toHaveBeenCalled();
             expect(mockOptions.requestInterceptor).toHaveBeenCalled();
         });
+
+        test("에러 로그 테스트", async () => {
+            const errorMessage = 'Request Interceptor Error';
+            const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+            mockRequestInterceptor.mockRejectedValue(errorMessage);
+
+            const mockProtoMessageInstance = new MockedSwaggerProtoMessage();
+            mockProtoMessageInstance.reqMessage = 'User';
+            (SwaggerProtoMessage as jest.Mock).mockImplementation(() => mockProtoMessageInstance);
+
+            globalThis.SwaggerProtoBufUIBundle(libraryObject, mockOptions);
+            const bundleConfig = MockedSwaggerUIBundle.mock.calls[0][0];
+            await bundleConfig.requestInterceptor(mockSwaggerRequest);
+
+            expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+            expect(consoleErrorSpy).toHaveBeenCalledWith(errorMessage);
+
+            consoleErrorSpy.mockRestore();
+        });
     })
 
     describe("Response Interceptor 테스트",() => {
@@ -164,6 +184,26 @@ describe('index.ts 테스트', () => {
             expect(mockResponseInterceptor).not.toHaveBeenCalled();
             expect(mockOptions.responseInterceptor).toHaveBeenCalled();
         });
-    })
+
+        test("에러 로그 테스트", async () => {
+            const errorMessage = 'Response Interceptor Error';
+            const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+            mockResponseInterceptor.mockRejectedValue(errorMessage);
+
+            const mockProtoMessageInstance = new MockedSwaggerProtoMessage();
+            mockProtoMessageInstance.resMessage = 'User';
+            (SwaggerProtoMessage as jest.Mock).mockImplementation(() => mockProtoMessageInstance);
+
+            globalThis.SwaggerProtoBufUIBundle(libraryObject, mockOptions);
+            const bundleConfig = MockedSwaggerUIBundle.mock.calls[0][0];
+            await bundleConfig.responseInterceptor(mockSwaggerResponse);
+
+            expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+            expect(consoleErrorSpy).toHaveBeenCalledWith(errorMessage);
+
+            consoleErrorSpy.mockRestore();
+        });
+    });
 
 });
