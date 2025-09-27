@@ -52,7 +52,7 @@ export default class SwaggerProtoBuf {
      * @param jsObject 변환할 객체
      * @param messageKey 변환할 최상위 메세지 이름
      */
-    async setProtoBufData(jsObject : jsObject, messageKey : string) : Promise<ProtoMessage>{
+    async setProtoBufData(jsObject : JavaScriptObject, messageKey : string) : Promise<ProtoMessage>{
         const message = this.#protobuf[messageKey];
 
         if(!message){
@@ -95,7 +95,7 @@ export default class SwaggerProtoBuf {
             }
 
             if(jsObject[key] instanceof Object){
-                let instance = await this.setProtoBufData(jsObject[key], type);
+                const instance = await this.setProtoBufData(jsObject[key], type);
 
                 setInstanceValue(setterName, instance);
                 continue;
@@ -121,11 +121,11 @@ export default class SwaggerProtoBuf {
      * @param data Message.toObject의 반환값
      * @returns descriptor에 맞게 변환된 함수
      */
-    messageToObject(data : jsObject){
-        let result : jsObject = {};
+    messageToObject(data : JavaScriptObject){
+        const result : JavaScriptObject = {};
         Object.keys(data).forEach((key)=>{
             if(data[key] instanceof Array){
-                let keyName = key.replace(this.ARRAY_INDEX_FLAG, "");
+                const keyName = key.replace(this.ARRAY_INDEX_FLAG, "");
 
                 result[keyName] = data[key].map((arr)=>{
                     return this.messageToObject(arr);
@@ -134,7 +134,7 @@ export default class SwaggerProtoBuf {
             else if(data[key] instanceof Object){
                 result[key] = this.messageToObject(data[key]);
             }
-            else {
+            else if(data[key]){
                 result[key] = data[key];
             }
         });
@@ -161,7 +161,7 @@ export default class SwaggerProtoBuf {
 
             const protoMessage = message.deserializeBinary(uint8Array);
 
-            return this.messageToObject(protoMessage.toObject());
+            return this.messageToObject(protoMessage.toObject() as JavaScriptObject);
         } catch (err) {
             throw new DeserializationError("Protobuf deserializeBinary failed", { cause: err });
         }
@@ -176,7 +176,7 @@ export default class SwaggerProtoBuf {
         try {
             const requestData = JSON.parse(data);
 
-            let protoMessage = await this.setProtoBufData(requestData, this.#message);
+            const protoMessage = await this.setProtoBufData(requestData, this.#message);
 
             const encodedBuffer = protoMessage.serializeBinary();
 
@@ -220,7 +220,7 @@ export default class SwaggerProtoBuf {
         this.checkMessage();
 
         if(response.data instanceof Blob) {
-            let data = await this.getBlobToObject(response.data);
+            const data = await this.getBlobToObject(response.data);
             response.data = data;
             response.text = JSON.stringify(data, null, 2);
         }
@@ -233,6 +233,7 @@ export default class SwaggerProtoBuf {
     }
 }
 
-type jsObject = {
-    [key : string] : any;
-};
+type JavaScriptValue = string | number | boolean | JavaScriptObject | JavaScriptObject[];
+interface JavaScriptObject {
+    [key: string]: JavaScriptValue;
+}
