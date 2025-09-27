@@ -1,11 +1,11 @@
-import SwaggerProtoBuf, * as core from "../core";
+import SwaggerProtoBuf from "../core";
 import { DeserializationError, InvalidSetterError, NotFoundError, SerializationError } from "../custom-error";
 import type { Descriptor } from "../types/protobuf";
 import { mockBlob, mockBodyData, mockDescriptor, mockProto, mockSwaggerRequest, mockSwaggerResponse, mockUserInstance, UserMock } from "./mocks/proto-mock";
 
 describe('core.ts 테스트', () => {
    const swaggerProtoBuf = new SwaggerProtoBuf({
-      proto: mockProto as any,
+      proto: mockProto,
       descriptor: mockDescriptor,
    });
 
@@ -56,7 +56,7 @@ describe('core.ts 테스트', () => {
 
          test("descriptor와 proto가 일치하지 않을때 에러 검증",async () => {
             const mockNoDescriptor = new SwaggerProtoBuf({
-               proto: mockProto as any,
+               proto: mockProto,
                descriptor: {
                   nested: {},
                }
@@ -70,7 +70,7 @@ describe('core.ts 테스트', () => {
 
          test("배열일때 descriptor에서 정의된 타입과 proto의 키가 일치하지 않을때 에러 검증",async () => {
             const mockInconsistencyDescriptor = new SwaggerProtoBuf({
-               proto: mockProto as any,
+               proto: mockProto,
                descriptor: {
                   nested: {
                      User: {
