@@ -1,7 +1,7 @@
 export interface ProtoMessage {
     serializeBinary(): BlobPart;
     toObject(): object;
-    [key: string]: any;
+    [setter: string]: (value : unknown)=>void;
 }
 
 export interface ProtoMessageConstructor {
