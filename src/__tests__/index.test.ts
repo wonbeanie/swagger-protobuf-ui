@@ -1,7 +1,7 @@
 import { SwaggerUIBundle } from "swagger-ui-dist";
-import { mockBlob, mockBodyData, mockDescriptor, mockOptions, mockProto, mockSwaggerRequest, mockSwaggerResponse, mockUserInstance, UserMock } from "./mocks/proto-mock";
-import SwaggerProtoBuf from "../core";
+import { mockDescriptor, mockOptions, mockProto, mockSwaggerRequest, mockSwaggerResponse } from "./mocks/proto-mock";
 import SwaggerProtoMessage from "../plugin";
+import '../index';
 
 const mockSetMessage = jest.fn();
 const mockRequestInterceptor = jest.fn(req => Promise.resolve(req));
@@ -48,13 +48,9 @@ jest.mock('../core', () => {
 
 describe('index.ts 테스트', () => {
     const libraryObject = {
-        proto: mockProto as any,
+        proto: mockProto,
         descriptor: mockDescriptor,
     };
-
-    beforeAll(() => {
-        require('../index');
-    });
 
     beforeEach(() => {
         jest.clearAllMocks();
