@@ -2,13 +2,6 @@ import SwaggerProtoMessage from "../plugin";
 import type { OpenAPISpec, OriginalAction, Request, System } from "../types/plugin";
 
 describe('plugin.ts 테스트', () => {
-
-    beforeEach(() => {
-        messages = {
-            "reqMessage" : "",
-            "resMessage" : ""
-        }
-    });
     
     describe('getProtoMessageKey 테스트', () => {
         it('spec에서 resMessage만 존재할때의 테스트', () => {
@@ -76,14 +69,9 @@ describe('plugin.ts 테스트', () => {
         }
     };
 
-    let plugin = new SwaggerProtoMessage();
+    const plugin = new SwaggerProtoMessage();
 
-    let executeRequest = plugin.getProtoMessageKey(mockOriginalAction, mockSystem);
-
-    let messages = {
-        "reqMessage" : "",
-        "resMessage" : ""
-    }
+    const executeRequest = plugin.getProtoMessageKey(mockOriginalAction, mockSystem);
 
     function getMessages(){
         return {
