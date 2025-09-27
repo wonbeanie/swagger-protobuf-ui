@@ -1,5 +1,5 @@
 import type { SwaggerRequest, SwaggerResponse } from "swagger-ui-dist";
-import SwaggerProtoBuf, * as core from "../core";
+import SwaggerProtoBuf from "../core";
 import { testDataBody } from "./mocks/proto-mock";
 import * as MyProto from "./test-data/proto.bundle";
 
