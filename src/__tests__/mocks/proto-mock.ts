@@ -129,7 +129,7 @@ export const mockOptions : {
    url: string;
    requestInterceptor ?: jest.Func;
    responseInterceptor ?: jest.Func;
-   plugins: any[];
+   plugins: unknown[];
 } = {
    dom_id: '#swagger-ui',
    url: 'https://localhost/segger.json',
