@@ -13,7 +13,8 @@
     "start:test": "webpack serve --mode development",
     "test": "npx jest --verbose",
     "test:coverage": "npx jest --verbose --coverage",
-    "lint": "eslint src/"
+    "lint": "eslint src/",
+    "prettier": "npx prettier --write src/"
   },
   "keywords": [],
   "author": "",
@@ -42,6 +43,7 @@
     "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
+    "prettier": "^3.6.2",
     "swagger-ui-dist": "^5.28.0"
   }
 }
