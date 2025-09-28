@@ -1,4 +1,4 @@
 export enum SWAGGER_INTERCEPTOR_KEYS {
-    REQUEST = "requestInterceptor",
-    RESPONSE = "responseInterceptor"
+	REQUEST = "requestInterceptor",
+	RESPONSE = "responseInterceptor",
 }

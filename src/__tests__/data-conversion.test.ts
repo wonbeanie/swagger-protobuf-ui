@@ -3,21 +3,20 @@ import SwaggerProtoBuf from "../core";
 import { testDataBody } from "./mocks/proto-mock";
 import * as MyProto from "./test-data/proto.bundle";
 
-describe('데이터 변환 시나리오 테스트', () => {
-   	const swaggerProtoBuf = new SwaggerProtoBuf(MyProto);
+describe("데이터 변환 시나리오 테스트", () => {
+	const swaggerProtoBuf = new SwaggerProtoBuf(MyProto);
 	const testRequest = {
-		url : "http://localhost:8080/users",
-		method : "post",
-		credentials : "application/protobuf",
-		body : JSON.stringify(testDataBody)
+		url: "http://localhost:8080/users",
+		method: "post",
+		credentials: "application/protobuf",
+		body: JSON.stringify(testDataBody),
 	} as SwaggerRequest;
 
 	const testResponse = {
-		url : "http://localhost:8080/users",
-		method : "post",
-		credentials : "application/protobuf",
+		url: "http://localhost:8080/users",
+		method: "post",
+		credentials: "application/protobuf",
 	} as SwaggerResponse;
-
 
 	afterEach(() => {
 		swaggerProtoBuf.setMessage = "";

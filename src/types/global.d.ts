@@ -4,5 +4,8 @@ import type { ProtobufLibrary } from "./protobuf";
 export {};
 
 declare global {
-  var SwaggerProtoBufUIBundle: (libraryObject: ProtobufLibrary, options: SwaggerConfigs) => void;
+	var SwaggerProtoBufUIBundle: (
+		libraryObject: ProtobufLibrary,
+		options: SwaggerConfigs
+	) => void;
 }

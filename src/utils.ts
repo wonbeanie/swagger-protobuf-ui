@@ -1,3 +1,3 @@
-export function isBlank(str: string){
-    return typeof str !== 'string' || str.trim().length === 0;
+export function isBlank(str: string) {
+	return typeof str !== "string" || str.trim().length === 0;
 }
