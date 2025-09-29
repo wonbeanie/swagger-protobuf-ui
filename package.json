@@ -14,14 +14,18 @@
     "test": "npx jest --verbose",
     "test:coverage": "npx jest --verbose --coverage",
     "lint": "eslint src/",
-    "prettier": "npx prettier --write src/"
+    "prettier": "npx prettier --write src/",
+    "e2e": "npx playwright test",
+    "e2e:ui": "npx playwright test --ui"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@playwright/test": "^1.55.1",
     "@types/jest": "^30.0.0",
+    "@types/node": "^24.5.2",
     "@types/swagger-ui-dist": "^3.30.6",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.2",
