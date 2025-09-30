@@ -11,12 +11,14 @@
     "build": "webpack --mode production",
     "start": "webpack serve --open --mode development",
     "start:test": "webpack serve --mode development",
+    "start:server": "cd example/server && npm run start",
     "test": "npx jest --verbose",
     "test:coverage": "npx jest --verbose --coverage",
     "lint": "eslint src/",
     "prettier": "npx prettier --write src/",
     "e2e": "npx playwright test",
-    "e2e:ui": "npx playwright test --ui"
+    "e2e:ui": "npx playwright test --ui",
+    "e2e:start-server": "concurrently \"npm run start:test\" \"npm run start:server\""
   },
   "keywords": [],
   "author": "",
@@ -28,6 +30,7 @@
     "@types/node": "^24.5.2",
     "@types/swagger-ui-dist": "^3.30.6",
     "babel-loader": "^10.0.0",
+    "concurrently": "^9.2.1",
     "css-loader": "^7.1.2",
     "eslint": "^9.36.0",
     "globals": "^16.4.0",
