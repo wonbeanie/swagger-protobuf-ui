@@ -4,10 +4,10 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"init" : "node scripts/init.js",
-		"compile:descriptor" : "npx pbjs -t json -o ./generated/descriptor.json ./proto/*.proto",
+		"init": "node scripts/init.js",
+		"compile:descriptor": "npx pbjs -t json -o ./generated/descriptor.json ./proto/*.proto",
 		"compile:proto": "npx protoc --js_out=import_style=commonjs,binary:./generated -I ./proto proto/*.proto",
-		"compile" : "npm run compile:descriptor && npm run compile:proto",
+		"compile": "npm run compile:descriptor && npm run compile:proto",
 		"create:entry": "node scripts/create-entry.js",
 		"bundle": "webpack",
 		"build": "npm run init && npm run compile && npm run create:entry && npm run bundle"
@@ -17,9 +17,12 @@
 	"license": "ISC",
 	"devDependencies": {
 		"google-protobuf": "^3.21.4",
-		"webpack": "^5.101.1",
-		"webpack-cli": "^6.0.1",
 		"protobufjs-cli": "^1.1.3",
-		"protoc-gen-js": "^3.21.4-4"
+		"protoc-gen-js": "^3.21.4-4",
+		"webpack": "^5.101.1",
+		"webpack-cli": "^6.0.1"
+	},
+	"dependencies": {
+		"swagger-protobuf-ui-bundle": "file:../.."
 	}
 }
