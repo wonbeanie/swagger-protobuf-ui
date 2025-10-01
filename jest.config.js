@@ -13,6 +13,7 @@ module.exports = {
     "/scripts/temp_test_protject",
     "/__tests__/mocks",
     "/__tests__/test-data",
+    "/e2e"
   ],
   moduleNameMapper: {
     "\\.css$": "<rootDir>/src/__tests__/mocks/css-mock.ts",
