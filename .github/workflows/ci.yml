@@ -37,7 +37,7 @@ jobs:
       run: npm run build --prefix example/protobuf
 
     - name: Make proto Folder
-      run: mkdir -p example/web/proto && mkdir -p example/server
+      run: mkdir -p example/web/proto && mkdir -p example/server/proto
 
     - name: Copy proto.bundle.js server Folder
       run: cp example/protobuf/dist/proto.bundle.js example/server/proto/proto.bundle.js
