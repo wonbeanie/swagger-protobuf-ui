@@ -1,14 +1,26 @@
 # swagger-protobuf-ui-bundle
 swagger-ui-bundle communicating by protobuf
 
-## 번들링 테스트 및 방법
-[webpack설정파일](./webpack.config.js)
 
+## 개발
+### 의존성 설치
+```bash
+npm install
 ```
-npm i
-npm run start // development로 webpack-dev-server 시작
-npm run build // production로 번들링 시작
-```
+
+### 주요 스크립트
+-   `npm run start`
+    -   개발용 웹팩 서버를 실행합니다.
+-   `npm run build`
+    -   프로덕션용으로 번들링합니다.
+-   `npm run test`
+    -   Jest를 사용하여 단위 테스트를 실행합니다.
+-   `npm run lint`
+    -   ESLint로 코드 스타일을 검사합니다.
+-   `npm run prettier:check`
+    -   Prettier로 코드 포맷팅을 검사합니다.
+-   `npm run e2e`
+    -   Playwright로 E2E 테스트를 실행합니다.
 
 ## 예시
 ### Swagger 웹 예시
@@ -90,7 +102,7 @@ window.onload = function() {
 
 ### 서버 예시
 프로토버퍼를 컴파일한 bundle.js를 사용하여 만든 api서버 예제<br/>
-[example/server]((./example/server))에 예제가 있습니다.
+[example/server](./example/server)에 예제가 있습니다.
 
 ## Acknowledgements
 
