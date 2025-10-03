@@ -9,12 +9,10 @@ example/server/proto
 example/web/proto
 
 scripts/temp_test_protject
-
 node_modules
-
 build
-
 coverage
+dist
 
 # Playwright
 /test-results/
