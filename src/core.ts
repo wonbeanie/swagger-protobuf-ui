@@ -12,6 +12,7 @@ import {
 	NotFoundError,
 	SerializationError,
 } from "./custom-error";
+import { sanitizeObject } from "./utils";
 
 /**
  * ProtoBuf 데이터를 파싱하거나 객체로 변환하는 클래스
@@ -263,8 +264,9 @@ export default class SwaggerProtoBuf {
 
 		if (response.data instanceof Blob) {
 			const data = await this.getBlobToObject(response.data);
-			response.data = data;
-			response.text = JSON.stringify(data, null, 2);
+			const sanitizedData = sanitizeObject(data) as JavaScriptObject;
+			response.data = sanitizedData;
+			response.text = JSON.stringify(sanitizedData, null, 2);
 		}
 
 		return response;
@@ -275,12 +277,12 @@ export default class SwaggerProtoBuf {
 	}
 }
 
-type JavaScriptValue =
+export type JavaScriptValue =
 	| string
 	| number
 	| boolean
 	| JavaScriptObject
 	| JavaScriptObject[];
-interface JavaScriptObject {
+export interface JavaScriptObject {
 	[key: string]: JavaScriptValue;
 }
