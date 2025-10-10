@@ -91,6 +91,9 @@ export default class SwaggerProtoBuf {
 		const messageKeys = Object.keys(this.#protobuf);
 
 		for (const key in jsObject) {
+			if (key === "__proto__" || key === "constructor" || key === "prototype") {
+				continue;
+			}
 			if (!messageType[key]) {
 				throw new NotFoundError(
 					`Could not find descriptor for field "${key}" in message "${messageKey}"`
@@ -151,6 +154,9 @@ export default class SwaggerProtoBuf {
 	messageToObject(data: JavaScriptObject) {
 		const result: JavaScriptObject = {};
 		Object.keys(data).forEach((key) => {
+			if (key === "__proto__" || key === "constructor" || key === "prototype") {
+				return;
+			}
 			if (data[key] instanceof Array) {
 				const keyName = key.replace(this.ARRAY_INDEX_FLAG, "");
 
