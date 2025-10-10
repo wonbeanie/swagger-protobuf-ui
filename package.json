@@ -1,6 +1,6 @@
 {
   "name": "swagger-protobuf-ui",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "swagger-ui-bundle communicating by protobuf",
   "main": "build/swagger-protobuf-core.js",
   "files": [
