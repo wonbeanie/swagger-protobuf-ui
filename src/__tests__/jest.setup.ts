@@ -1,1 +1,1 @@
-import 'blob-polyfill';
+import "blob-polyfill";
