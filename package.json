@@ -10,16 +10,23 @@
     "example": "example"
   },
   "scripts": {
-    "dev": "webpack --mode development",
-    "build": "webpack --mode production",
-    "start": "webpack serve --open --mode development",
-    "start:test": "webpack serve --mode development",
+    "dev": "webpack --mode development --config webpack.core.js",
+
+    "build": "webpack --mode production --config webpack.core.js",
+    "build:lite": "webpack --mode production --config webpack.lite.js",
+
+    "start": "webpack serve --open --mode development --config webpack.core.js",
+    "start:test": "webpack serve --mode development --config webpack.core.js",
     "start:server": "cd example/server && npm run start",
+
     "test": "npx jest --verbose",
     "test:coverage": "npx jest --verbose --coverage",
+
     "lint": "eslint src/",
+
     "prettier": "npx prettier --write src/",
     "prettier:check": "npx prettier --check src/",
+    
     "e2e": "npx playwright test",
     "e2e:ui": "npx playwright test --ui",
     "e2e:start-server": "concurrently \"npm run start:test\" \"npm run start:server\""
@@ -53,7 +60,8 @@
     "typescript-eslint": "^8.44.1",
     "webpack": "^5.101.3",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.2"
+    "webpack-dev-server": "^5.2.2",
+    "webpack-merge": "^6.0.1"
   },
   "dependencies": {
     "dompurify": "^3.2.7",

@@ -8,4 +8,6 @@ declare global {
 		libraryObject: ProtobufLibrary,
 		options: SwaggerConfigs
 	) => void;
+
+	var SwaggerUIBundle: (options: SwaggerConfigs) => void;
 }
