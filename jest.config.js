@@ -11,13 +11,8 @@ module.exports = {
   },
   testPathIgnorePatterns: [
     "/node_modules/",
-    "/scripts/temp_test_protject",
-    "/__tests__/mocks",
-    "/__tests__/test-data",
-    "/e2e",
-    "/dist",
-    "/jest.setup.ts"
   ],
+  testMatch: ["**/__tests__/**/*.test.ts"],
   moduleNameMapper: {
     "\\.css$": "<rootDir>/src/__tests__/mocks/css-mock.ts",
   },
