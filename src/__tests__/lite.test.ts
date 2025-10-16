@@ -1,5 +1,40 @@
 import { mockDescriptor, mockOptions, mockProto } from "./mocks/proto-mock";
 import "../lite"
+import { runInterceptorTest } from "./helpers";
+import { mockRequestInterceptor, mockResponseInterceptor, mockSetMessage } from "./mocks/core-mock";
+import SwaggerProtoMessage from "../plugin";
+
+jest.mock("../plugin", () => {
+	return jest.fn().mockImplementation(() => {
+		return {
+			reqMessage: "",
+			resMessage: "",
+			swaggerPlugin: {
+				statePlugins: {
+					spec: {
+						wrapActions: {
+							executeRequest: jest.fn(),
+						},
+					},
+				},
+			},
+		};
+	});
+});
+
+jest.mock("../core", () => {
+  return jest.fn().mockImplementation(() => {
+    const instance = {
+      requestInterceptor: mockRequestInterceptor,
+      responseInterceptor: mockResponseInterceptor,
+    };
+    Object.defineProperty(instance, "setMessage", {
+      set: mockSetMessage,
+      configurable: true,
+    });
+    return instance;
+  });
+});
 
 describe("lite.ts 테스트", () => {
   const libraryObject = {
@@ -20,7 +55,6 @@ describe("lite.ts 테스트", () => {
 
     beforeAll(()=>{
       document.getElementById = mockGetElementById;
-
       document.createElement = mockCreateElement;
     })
 
@@ -44,5 +78,19 @@ describe("lite.ts 테스트", () => {
       expect(document.getElementById).toHaveBeenCalledTimes(1);
       expect(document.createElement).toHaveBeenCalledTimes(2);
     });
+  });
+
+  describe("Interceptor 테스트", () => {
+    const mockSwaggerUiBundle = jest.fn();
+    
+    beforeAll(()=>{
+      globalThis.SwaggerUIBundle = mockSwaggerUiBundle;
+    })
+
+    beforeEach(()=>{
+      mockSwaggerUiBundle.mockClear();
+    })
+
+    runInterceptorTest(mockSwaggerUiBundle, SwaggerProtoMessage as jest.Mock);
   });
 });
