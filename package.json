@@ -17,6 +17,7 @@
 
     "start": "webpack serve --open --mode development --config webpack.core.js",
     "start:test": "webpack serve --mode development --config webpack.core.js",
+    "start:test:lite": "webpack serve --mode development --config webpack.lite.js",
     "start:server": "cd example/server && npm run start",
 
     "test": "npx jest --verbose",
@@ -27,9 +28,12 @@
     "prettier": "npx prettier --write src/",
     "prettier:check": "npx prettier --check src/",
     
-    "e2e": "npx playwright test",
+    "e2e": "npm run e2e:core && npm run e2e:lite",
+    "e2e:core": "npx playwright test -c playwright.config.core.ts",
+    "e2e:lite": "npx playwright test -c playwright.config.lite.ts",
     "e2e:ui": "npx playwright test --ui",
-    "e2e:start-server": "concurrently \"npm run start:test\" \"npm run start:server\""
+    "e2e:start-server": "concurrently \"npm run start:test\" \"npm run start:server\"",
+    "e2e:start-server:lite": "concurrently \"npm run start:test:lite\" \"npm run start:server\""
   },
   "keywords": [],
   "author": "",
