@@ -14,6 +14,8 @@ globalThis.SwaggerProtoBufUIBundle = (
 
 		let errorElement = document.createElement("div");
 
+		errorElement.setAttribute("id", "bundle-error");
+
 		errorElement.setAttribute("style", "position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:40px;width:100%;text-align:center;");
 		
 		errorElement.innerText = "SwaggerUiBundle not found\nPlease import swagger-ui-bundle.js";
