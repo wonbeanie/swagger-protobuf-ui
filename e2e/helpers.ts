@@ -1,4 +1,4 @@
-import { test, expect, Locator, Page } from '@playwright/test';
+import { test, expect, Locator } from '@playwright/test';
 
 const getResponseData = {
   "id": 1,
@@ -42,11 +42,7 @@ const postResponseData = {
   ]
 } as const;
 
-test.beforeEach(async ({ page })=>{
-  await page.goto('/');
-});
-
-test.describe('E2E 테스트 시작',() => {
+export function runE2ETests(){
   test('메인 페이지가 올바르게 로드되어야 한다', async ({ page }) => {
     // 페이지 타이틀이 'My App'인지 확인
     await expect(page).toHaveTitle(/Swagger UI/);
@@ -137,7 +133,7 @@ test.describe('E2E 테스트 시작',() => {
 
     expect(header.trim()).toBe("content-type: application/protobuf");
   });
-})
+}
 
 async function findTextChild(locator : Locator){
   return await locator.evaluate(element => {
