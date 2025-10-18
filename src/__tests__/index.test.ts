@@ -1,11 +1,11 @@
 import { SwaggerUIBundle } from "swagger-ui-dist";
-import {
-	mockDescriptor,
-	mockOptions,
-	mockProto,
-} from "./mocks/proto-mock";
+import { mockDescriptor, mockOptions, mockProto } from "./mocks/proto-mock";
 import "../index";
-import { mockRequestInterceptor, mockResponseInterceptor, mockSetMessage } from "./mocks/core-mock";
+import {
+	mockRequestInterceptor,
+	mockResponseInterceptor,
+	mockSetMessage,
+} from "./mocks/core-mock";
 import { runInterceptorTest } from "./helpers";
 import SwaggerProtoMessage from "../plugin";
 
