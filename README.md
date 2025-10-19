@@ -13,6 +13,8 @@ npm install
     -   개발용 웹팩 서버를 실행합니다.
 -   `npm run build`
     -   프로덕션용으로 번들링합니다.
+-   `npm run build:lite`
+    -   프로덕션용(lite버전)으로 번들링합니다.
 -   `npm run test`
     -   Jest를 사용하여 단위 테스트를 실행합니다.
 -   `npm run lint`
@@ -21,6 +23,14 @@ npm install
     -   Prettier로 코드 포맷팅을 검사합니다.
 -   `npm run e2e`
     -   Playwright로 E2E 테스트를 실행합니다.
+
+### 빌드 파일
+- 기본 버전
+    - swagger-protobuf-core.js
+    - swagger-ui-bundle.js이 포함된 파일
+- Lite 버전
+    - swagger-protobuf-lite.js
+    - swagger-ui-bundle.js를 포함하지 않은 경량화 파일
 
 ## 예시
 ### Swagger 웹 예시
