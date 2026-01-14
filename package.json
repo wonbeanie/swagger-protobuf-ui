@@ -3,6 +3,11 @@
   "version": "1.1.0",
   "description": "swagger-ui-bundle communicating by protobuf",
   "main": "build/swagger-protobuf-core.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wonbeanie/swagger-protobuf-ui.git"
+  },
+  "homepage": "https://github.com/wonbeanie/swagger-protobuf-ui#readme",
   "files": [
     "build"
   ],
