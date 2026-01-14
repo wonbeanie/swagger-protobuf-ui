@@ -36,15 +36,15 @@ npm install
 ### Swagger 웹 예시
 
 #### 예시폴더
-[./example/web](./example/web)
+[./example/web](https://github.com/wonbeanie/swagger-protobuf-ui/tree/main/example/web)
 
 #### 필수 import 파일
-[index.html](./example/web/index.html)
+[index.html](https://github.com/wonbeanie/swagger-protobuf-ui/tree/main/example/web/index.html)
 
 - proto.bundle.js
     - 프로토버퍼 번들 파일 (데이터 파일 + descriptor 파일)
-    - [예시 번들 파일 번들링 방법](./example/protobuf/README.md)
-- [swagger-initializer.js](./example/web/swagger-initializer.js)
+    - [예시 번들 파일 번들링 방법](https://github.com/wonbeanie/swagger-protobuf-ui/tree/main/example/protobuf/README.md)
+- [swagger-initializer.js](https://github.com/wonbeanie/swagger-protobuf-ui/tree/main/example/web/swagger-initializer.js)
     - SwaggerProtoBufUIBundle 초기화 파일
 
 ```
@@ -59,10 +59,10 @@ npm install
 SwaggerUIBundle를 대체하여 SwaggerUI를 생성해주는 함수
 
 #### 예시파일
-[swagger-initializer.js](./example/web/swagger-initializer.js)
+[swagger-initializer.js](https://github.com/wonbeanie/swagger-protobuf-ui/tree/main/example/web/swagger-initializer.js)
 
 #### 매개변수
-1. [ProtoLibraryObject](./example/protobuf/webpack.config.js#L12)
+1. [ProtoLibraryObject](https://github.com/wonbeanie/swagger-protobuf-ui/tree/main/example/protobuf/webpack.config.js#L12)
     - 프로토버퍼로 생성된 js번들에서 사용되는 전역변수
 2. Options
     - SwaggerUiBundle의 Options와 동일함
@@ -83,7 +83,7 @@ window.onload = function() {
 요청과 응답에 필요한 Proto.Message는 아래의 키로 설정해야함.
 
 #### 예시파일
-[server.json](./example/web/server.json)
+[server.json](https://github.com/wonbeanie/swagger-protobuf-ui/tree/main/example/web/server.json)
 
 1. req_message
     - 요청에 사용되는 Message 키
@@ -108,11 +108,11 @@ window.onload = function() {
 
 ### 프로토버퍼 컴파일 예시
 프로토버퍼(.proto)를 사용하여 JavaScript(bundle.js)를 만든 예제<br/>
-[example/protobuf](./example/protobuf)에 예제가 있습니다.
+[example/protobuf](https://github.com/wonbeanie/swagger-protobuf-ui/tree/main/example/protobuf)에 예제가 있습니다.
 
 ### 서버 예시
 프로토버퍼를 컴파일한 bundle.js를 사용하여 만든 api서버 예제<br/>
-[example/server](./example/server)에 예제가 있습니다.
+[example/server](https://github.com/wonbeanie/swagger-protobuf-ui/tree/main/example/server)에 예제가 있습니다.
 
 ## Acknowledgements
 
